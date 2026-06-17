@@ -1,1 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twinz Atchar & Empire + Aquapure Water - Wholesale Catalog</title>
+<style>
+:root{--bg:#fff9f0;--card:#ffffff;--accent:#d97706;--blue-accent:#2563eb;--green:#16a34a;--red:#dc2626;--text:#1a1a1a;--muted:#6b7280}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;padding-bottom:220px}
+.header{background:linear-gradient(135deg,#d97706,#b45309);color:white;padding:15px;text-align:center;position:relative}
+.header.blue{background:linear-gradient(135deg,#2563eb,#1e40af)}
+.logo{width:80px;height:80px;border-radius:50%;background:white;padding:5px;margin:0 auto 10px;border:3px solid white;object-fit:cover}
+.header h1{margin:0;font-size:22px}
+.header p{margin:5px 0;font-size:12px}
+.special-banner{background:#fef3c7;color:#92400e;padding:10px;text-align:center;font-weight:bold;font-size:13px;border-bottom:3px solid var(--accent);display:none}
+.special-banner.show{display:block}
+.container{padding:15px;max-width:900px;margin:0 auto}
+.badge{background:var(--green);color:white;padding:4px 8px;border-radius:20px;font-size:10px;display:inline-block;margin:3px}
+.badge.red{background:var(--red)}
+.badge.blue{background:var(--blue-accent)}
+.card{background:var(--card);border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1);position:relative}
+.card.oos{opacity:0.5}
+.card.oos::after{content:'OUT OF STOCK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);background:var(--red);color:white;padding:8px 20px;font-weight:bold;border-radius:5px;font-size:14px;z-index:10}
+.card img{width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:8px;border:2px solid #f3f4f6}
+.card h3{margin:5px 0;color:var(--accent);font-size:16px}
+.card.blue h3{color:var(--blue-accent)}
+.price{font-size:18px;font-weight:bold;color:var(--green)}
+.old-price{text-decoration:line-through;color:var(--muted);font-size:12px;margin-left:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.btn{background:var(--accent);color:white;border:none;padding:10px 15px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px}
+.btn.blue{background:var(--blue-accent)}
+.btn:disabled{background:var(--muted);cursor:not-allowed}
+.btn-whatsapp{background:#25D366}
+.btn-secondary{background:#374151;font-size:12px}
+.btn-red{background:var(--red);font-size:11px;padding:6px 10px}
+.btn-purple{background:#7c3aed}
+.btn-green{background:var(--green)}
+.section-title{font-size:18px;margin:20px 0 10px 0;color:var(--accent);border-left:4px solid var(--accent);padding-left:10px}
+.section-title.blue{color:var(--blue-accent);border-left:4px solid var(--blue-accent)}
+.company{font-size:11px;color:var(--muted);text-align:center;margin:20px 0;line-height:1.6}
+.qty-input{width:60px;padding:5px;border:1px solid #ccc;border-radius:4px;text-align:center;margin:0 5px}
+input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
 
+/* FIXED CART */
+.cart{position:fixed;bottom:0;left:0;right:0;background:var(--card);padding:12px;border-top:3px solid var(--accent);box-shadow:0 -2px 10px rgba(0,0,0,0.15);max-height:300px;overflow-y:auto;z-index:999}
+.cart.blue{border-top:3px solid var(--blue-accent)}
+.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cart-total{font-size:20px;font-weight:bold;color:var(--green);margin:10px 0}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px dashed #ddd;font-size:12px;background:#fafafa;border-radius:6px;margin-bottom:5px}
+
+/* Modal Styles */
+.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5)}
+.modal-content{background:var(--card);margin:5% auto;padding:20px;border-radius:12px;width:90%;max-width:500px;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.close{float:right;font-size:24px;cursor:pointer}
+.bank-details{background:#f0f9ff;border:2px solid var(--blue-accent);padding:15px;border-radius:8px;margin:15px 0}
+.qr-box{text-align:center;margin:15px 0;padding:15px;background:#fff;border:2px dashed var(--accent);border-radius:8px}
+.qr-box.blue{border:2px dashed var(--blue-accent)}
+.qr-box img{width:180px;height:180px;margin:10px auto;display:block}
+.admin-panel{background:#f3f4f6;padding:10px;border-radius:8px;margin:15px 0;border:2px dashed var(--accent)}
+.admin-panel.blue{border:2px dashed var(--blue-accent)}
+.admin-panel h4{margin:5px 0;font-size:13px}
+.toggle-btn{background:#6b7280;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:10px;cursor:pointer;margin-left:5px}
+.copy-box{display:flex;gap:5px;margin-top:8px}
+.copy-box input{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:11px}
+.sync-status{position:fixed;top:70px;right:10px;z-index:999;background:var(--green);color:white;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}
+.admin-only{display:block}
+.brand-switcher{display:flex;gap:10px;margin:15px 0;justify-content:center}
+.brand-btn{padding:10px 20px;border-radius:8px;border:2px solid var(--accent);background:white;color:var(--accent);font-weight:bold;cursor:pointer}
+.brand-btn.active{background:var(--accent);color:white}
+.brand-btn.blue{border:2px solid var(--blue-accent);color:var(--blue-accent)}
+.brand-btn.blue.active{background:var(--blue-accent);color:white}
+.section{display:none}
+.section.active{display:block}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="sync-status" id="syncStatus">🟡 Connecting...</div>
+
+<div class="special-banner" id="specialBanner">
+🎉 JUNE SPECIAL: Buy 2 Supermarket Packs, Get 1 Case Mango Atchar FREE!
+</div>
+
+<div class="brand-switcher">
+  <button class="brand-btn active" onclick="switchBrand('atchar')">🏪 Twinz Atchar</button>
+  <button class="brand-btn blue" onclick="switchBrand('water')">💧 Aquapure Water</button>
+</div>
+
+<!-- TWATZ ATCHAR SECTION -->
+<div class="section active" id="atcharSection">
+<div class="header">
+ <img src="https://files.catbox.moe/jsofm6.png" alt="Twinz Logo" class="logo">
+  <h1>TWINZ ATCHAR & EMPIRE</h1>
+  <p>Wholesale Supplier | Burgersfort | Affordable Packages</p>
+  <span class="badge">Free Delivery 20km</span>
+  <span class="badge">Bulk Discounts</span>
+  <span class="badge blue">EFT + QR Pay</span>
+</div>
+
+<div class="container">
+<div class="admin-panel admin-only" id="adminPanelAtchar">
+  <h4>⚙️ Admin Controls - Atchar Stock</h4>
+  <button class="btn-secondary" onclick="toggleSpecial()">Toggle Monthly Special</button>
+  <small style="display:block;margin-top:5px;color:var(--muted)">Changes sync instantly</small>
+</div>
+
+<div class="section-title">🏪 Shop Starter Packs</div>
+<div class="grid">
+<div class="card" id="cardA" data-id="cardA">
+  <button class="toggle-btn admin-only" onclick="toggleStock('cardA')">OOS</button>
+  <img src="https://files.catbox.moe/9w69eo.jpg" alt="Shop Starter Pack A">
+  <h3>Shop Starter Pack A - R450</h3>
+  <p>12x 380g Mango Atchar<br>12x 380g Chakalaka Atchar<br>6x 1L Empire Hot Sauce</p>
+  <div><span class="price">R450</span> <span class="old-price">R540</span></div>
+  <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="packA" value="0" min="0"></div>
+  <button class="btn" id="btnA" onclick="addToCart('Shop Starter Pack A', 450, 'packA', 'atchar')">Add to Order</button>
+</div>
+
+<div class="card" id="cardEmpire" data-id="cardEmpire">
+  <button class="toggle-btn admin-only" onclick="toggleStock('cardEmpire')">OOS</button>
+  <img src="https://files.catbox.moe/tqb15p.jpg" alt="Empire Sauce">
+  <h3>Empire Sauce 1L</h3>
+  <p>12 units/case | R48 each wholesale</p>
+  <div><span class="price">R576/case</span></div>
+  <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="empire" value="0" min="0"></div>
+  <button class="btn" id="btnEmpire" onclick="addToCart('Empire Sauce 1L x12', 576, 'empire', 'atchar')">Add</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- AQUAPURE WATER SECTION -->
+<div class="section" id="waterSection">
+<div class="header blue">
+ <img src="https://files.catbox.moe/jsofm6.png" alt="Aquapure Logo" class="logo">
+  <h1>AQUAPURE STILL WATER</h1>
+  <p>Pure by nature. Perfect for you | Shushumela Ext 2</p>
+  <span class="badge">Free Delivery</span>
+  <span class="badge">Open Daily 9am-7pm</span>
+  <span class="badge blue">Refill + Bottled</span>
+</div>
+
+<div class="container">
+<div class="admin-panel admin-only blue" id="adminPanelWater">
+  <h4>⚙️ Admin Controls - Water Stock</h4>
+  <button class="btn-secondary" onclick="toggleStock('water500')">Toggle 500ml</button>
+  <button class="btn-secondary" onclick="toggleStock('water5L')">Toggle 5L</button>
+  <small style="display:block;margin-top:5px;color:var(--muted)">Water stock syncs live too</small>
+</div>
+
+<div class="section-title blue">💧 Bottled Water Bulk Packs</div>
+<div class="grid">
+<div class="card blue" id="water500" data-id="water500">
+  <button class="toggle-btn admin-only" onclick="toggleStock('water500')">OOS</button>
+  <img src="https://files.catbox.moe/26444088568598719" alt="Aquapure 500ml">
+  <h3>Aquapure 500ml x24</h3>
+  <p>Case of 24 bottles<br>Purified still water<br>Perfect for events</p>
+  <div><span class="price">R120/case</span> <span class="old-price">R144</span></div>
+  <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq500" value="0" min="0"></div>
+  <button class="btn blue" id="btn500" onclick="addToCart('Aquapure 500ml x24', 120, 'aq500', 'water')">Add to Order</button>
+</div>
+
+<div class="card blue" id="water5L" data-id="water5L">
+  <button class="toggle-btn admin-only" onclick="toggleStock('water5L')">OOS</button>
+  <img src="https://files.catbox.moe/26444088568598719" alt="Aquapure 5L">
+  <h3>Aquapure 5L x4</h3>
+  <p>Case of 4 x 5L bottles<br>Home/Office supply<br>Refill available</p>
+  <div><span class="price">R160/case</span> <span class="old-price">R200</span></div>
+  <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq5l" value="0" min="0"></div>
+  <button class="btn blue" id="btn5L" onclick="addToCart('Aquapure 5L x4', 160, 'aq5l', 'water')">Add to Order</button>
+</div>
+
+<div class="card blue" id="waterRefill" data-id="waterRefill">
+  <button class="toggle-btn admin-only" onclick="toggleStock('waterRefill')">OOS</button>
+  <img src="https://files.catbox.moe/26444088568598719" alt="Water Refill">
+  <h3>20L Refill Service</h3>
+  <p>Bring your container<br>High-quality purified water<br>Same day service</p>
+  <div><span class="price">R25/20L</span></div>
+  <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="refill" value="0" min="0"></div>
+  <button class="btn blue" id="btnRefill" onclick="addToCart('20L Water Refill', 25, 'refill', 'water')">Add to Order</button>
+</div>
+</div>
+
+<div class="section-title blue">📞 Contact Aquapure</div>
+<div class="card blue">
+<p><b>📞 072 957 4064 / 076 935 9392</b><br>
+📍 Shushumela Ext 2, Next to Batubatse Primary School<br>
+⏰ 9am - 19:00pm | Open Daily</p>
+</div>
+</div>
+</div>
+
+<div class="company">
+  <b>TWINZ COOPERATE SERVICES PTY LTD</b><br>
+  Company Reg: 2024/444303/07 | VAT: 9819040198<br>
+  Atchar: Burgersfort | Water: Shushumela Ext 2<br>
+  📞 <b>068 254 7352</b> | 📞 <b>072 957 4064</b>
+</div>
+
+<!-- CARTS -->
+<div class="cart" id="cartAtchar" style="display:none">
+  <div class="cart-header">
+    <div><b>Atchar Order:</b> <span id="cartItemsAtchar">0 items</span></div>
+    <button class="btn-red" onclick="clearCart('atchar')">🗑️ Cancel</button>
+  </div>
+  <div id="cartListAtchar"></div>
+  <div class="cart-total">Total: R<span id="cartTotalAtchar">0</span></div>
+  <button class="btn btn-whatsapp" onclick="sendWhatsAppOrder('atchar')">📱 Send Atchar Order</button>
+  <button class="btn" onclick="openPaymentModal('atchar')">💳 Pay Atchar QR/EFT</button>
+</div>
+
+<div class="cart blue" id="cartWater" style="display:none">
+  <div class="cart-header">
+    <div><b>Water Order:</b> <span id="cartItemsWater">0 items</span></div>
+    <button class="btn-red" onclick="clearCart('water')">🗑️ Cancel</button>
+  </div>
+  <div id="cartListWater"></div>
+  <div class="cart-total">Total: R<span id="cartTotalWater">0</span></div>
+  <button class="btn btn-whatsapp" onclick="sendWhatsAppOrder('water')">📱 Send Water Order</button>
+  <button class="btn blue" onclick="openPaymentModal('water')">💳 Pay Water QR/EFT</button>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closePaymentModal()">&times;</span>
+    <h3 id="modalTitle">💳 Pay with QR Code</h3>
+    <div class="qr-box" id="qrBox">
+      <p><b>Scan to Pay</b></p>
+      <img id="qrCode" src="" alt="QR Code">
+      <p><b>Amount: R<span id="qrAmount">0</span></b></p>
+    </div>
+    <div class="bank-details">
+      <p><b>Bank:</b> Standard Bank</p>
+      <p><b>Account Name:</b> TWINZ COOPERATE SERVICES PTY LTD</p>
+      <p><b>Account Number:</b> 10 26 459 443 4</p>
+      <p><b>Branch Code:</b> 006145</p>
+    </div>
+    <button class="btn btn-whatsapp" onclick="sendPOPWhatsApp()">📱 Send POP via WhatsApp</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAE-2ZlY3dPKKWNNQIYt6SG846BboS5-VI",
+  authDomain: "twinz-catalog.firebaseapp.com",
+  databaseURL: "https://twinz-catalog-default-rtdb.firebaseio.com",
+  projectId: "twinz-catalog",
+  storageBucket: "twinz-catalog.firebasestorage.app",
+  messagingSenderId: "472687488237",
+  appId: "1:472687488237:web:bc0164733c283da59a30e4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let cartAtchar = [];
+let cartWater = [];
+let currentBrand = 'atchar';
+let isClientMode = window.location.search.includes('client=true');
+
+// BRAND SWITCHER
+window.switchBrand = function(brand) {
+  currentBrand = brand;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
+
+  if(brand === 'atchar') {
+    document.getElementById('atcharSection').classList.add('active');
+    document.querySelector('.brand-btn:nth-child(1)').classList.add('active');
+  } else {
+    document.getElementById('waterSection').classList.add('active');
+    document.querySelector('.brand-btn:nth-child(2)').classList.add('active');
+  }
+}
+
+// FIREBASE LISTENERS
+const specialRef = ref(db, 'catalog/special');
+const stockRef = ref(db, 'catalog/stock');
+
+onValue(specialRef, (snapshot) => {
+  let isActive = snapshot.val();
+  document.getElementById('specialBanner').classList.toggle('show', isActive);
+  document.getElementById('syncStatus').innerText = '🟢 Live Sync';
+});
+
+onValue(stockRef, (snapshot) => {
+  let stock = snapshot.val() || {};
+  document.querySelectorAll('.card[data-id]').forEach(card => {
+    let id = card.dataset.id;
+    let isOOS = stock[id];
+    if(isOOS) {
+      card.classList.add('oos');
+      let btn = card.querySelector('.btn');
+      if(btn) btn.disabled = true;
+    } else {
+      card.classList.remove('oos');
+      let btn = card.querySelector('.btn');
+      if(btn) btn.disabled = false;
+    }
+  });
+  document.getElementById('syncStatus').innerText = '🟢 Synced ' + new Date().toLocaleTimeString();
+});
+
+window.toggleSpecial = function() {
+  let banner = document.getElementById('specialBanner');
+  let newState =!banner.classList.contains('show');
+  set(specialRef, newState);
+}
+
+window.toggleStock = function(cardId) {
+  let card = document.getElementById(cardId);
+  let isOOS = card.classList.contains('oos');
+  set(ref(db, 'catalog/stock/' + cardId),!isOOS);
+}
+
+// CART FUNCTIONS
+window.addToCart = function(name, price, qtyId, brand) {
+  let qty = parseInt(document.getElementById(qtyId).value);
+  if(qty <= 0) { alert('Enter quantity first'); return; }
+
+  let cart = brand === 'atchar'? cartAtchar : cartWater;
+  let existing = cart.find(item => item.name === name);
+  if(existing) {
+    existing.qty += qty;
+    existing.subtotal = existing.qty * price;
+  } else {
+    cart.push({name, price, qty, subtotal: price * qty});
+  }
+
+  updateCart(brand);
+  document.getElementById(qtyId).value = 0;
+  alert(name + ' x' + qty + ' added');
+}
+
+function updateCart(brand) {
+  let cart = brand === 'atchar'? cartAtchar : cartWater;
+  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+  let itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
+
+  document.getElementById('cartItems' + brand.charAt(0).toUpperCase() + brand.slice(1)).innerText = itemCount + ' items';
+  document.getElementById('cartTotal' + brand.charAt(0).toUpperCase() + brand.slice(1)).innerText = total.toLocaleString();
+  document.getElementById('cart' + brand.charAt(0).toUpperCase() + brand.slice(1)).style.display = cart.length > 0? 'block' : 'none';
+
+  let listHTML = cart.map((item, index) => `
+    <div class="cart-item">
+      <div style="flex:1">
+        <b>${item.name}</b><br>
+        <small>${item.qty} x R${item.price.toLocaleString()} = R${item.subtotal.toLocaleString()}</small>
+      </div>
+      <button class="btn-red" onclick="removeItem(${index}, '${brand}')">Remove</button>
+    </div>
+  `).join('');
+
+  document.getElementById('cartList' + brand.charAt(0).toUpperCase() + brand.slice(1)).innerHTML = listHTML;
+}
+
+window.removeItem = function(index, brand) {
+  let cart = brand === 'atchar'? cartAtchar : cartWater;
+  cart.splice(index, 1);
+  updateCart(brand);
+}
+
+window.clearCart = function(brand) {
+  if(confirm('Cancel entire order?')) {
+    if(brand === 'atchar') cartAtchar = [];
+    else cartWater = [];
+    updateCart(brand);
+  }
+}
+
+window.sendWhatsAppOrder = function(brand) {
+  let cart = brand === 'atchar'? cartAtchar : cartWater;
+  if(cart.length === 0) return;
+  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+  let brandName = brand === 'atchar'? 'Twinz Atchar' : 'Aquapure Water';
+  let number = brand === 'atchar'? '27682547352' : '27769579392';
+
+  let orderText = `Hello ${brandName}, new order:\n\n`;
+  cart.forEach(item => {
+    orderText += `• ${item.name}\n Qty: ${item.qty} | R${item.subtotal.toLocaleString()}\n\n`;
+  });
+  orderText += `TOTAL: R${total.toLocaleString()}\n\nShop Name: \nAddress: \nPhone: `;
+  window.open(`https://wa.me/${number}?text=${encodeURIComponent(orderText)}`, '_blank');
+}
+
+window.openPaymentModal = function(brand) {
+  let cart = brand === 'atchar'? cartAtchar : cartWater;
+  if(cart.length === 0) { alert('Add items to cart first'); return; }
+  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+
+  document.getElementById('modalTitle').innerText = `💳 Pay ${brand === 'atchar'? 'Atchar' : 'Water'} with QR`;
+  document.getElementById('qrAmount').innerText = total.toLocaleString();
+  document.getElementById('qrBox').className = brand === 'water'? 'qr-box blue' : 'qr-box';
+  document.getElementById('qrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Beneficiary:TWINZ%20COOPERATE%20SERVICES%0AAmount:${total}`;
+  document.getElementById('paymentModal').style.display = 'block';
+}
+
+window.closePaymentModal = function() {
+  document.getElementById('paymentModal').style.display = 'none';
+}
+
+window.sendPOPWhatsApp = function() {
+  let cart = currentBrand === 'atchar'? cartAtchar : cartWater;
+  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+  let number = currentBrand === 'atchar'? '27682547352' : '27769579392';
+  let msg = 'POP attached for ' + (currentBrand === 'atchar'? 'Twinz' : 'Aquapure') + ' order.\nAmount: R' + total.toLocaleString();
+  window.open(`https://wa.me/${number}?text=${encodeURIComponent(msg)}`, '_blank');
+  closePaymentModal();
+}
+
+// INIT
+if(isClientMode) {
+  document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+}
+</script>
+
+</body>
+</html>
