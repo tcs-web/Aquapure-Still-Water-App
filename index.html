@@ -424,9 +424,9 @@ input:focus{
 }
 
 @media(max-width:600px){
- .grid{grid-template-columns:1fr}
- .header h1{font-size:21px}
- .card img{height:180px}
+.grid{grid-template-columns:1fr}
+.header h1{font-size:21px}
+.card img{height:180px}
 </style>
 </head>
 <body>
@@ -540,14 +540,17 @@ input:focus{
   <h3>Create Invoice for Client</h3>
   <input type="text" id="clientName" placeholder="Client/Shop Name">
   <input type="text" id="clientPhone" placeholder="Client Phone">
+  <input type="email" id="clientEmail" placeholder="Client Email">
   <input type="text" id="clientAddress" placeholder="Delivery Address - Shushumela Ext 2">
   <button class="btn btn-purple" onclick="generateInvoicePDF()">📄 Generate Invoice PDF</button>
   <button class="btn btn-whatsapp" onclick="sendInvoiceWhatsApp()">📱 Send Invoice via WhatsApp</button>
+  <button class="btn btn-blue" onclick="sendInvoiceEmail()">✉️ Send Invoice via Email</button>
 </div>
 
 <div class="company">
   <b>AQUAPURE STILL WATER</b><br>
   <b>Contact:</b> 072 957 4064 / 076 935 9392<br>
+  <b>Email:</b> givenwesties09@icloud.com<br>
   <b>Address:</b> Shushumela Ext 2, Next to Batubatse Primary School<br>
   <b>Hours:</b> 9am - 19:00pm | Open Daily<br>
   <b>Slogan:</b> HYDRATE. REFRESH. LIVE PURE.
@@ -764,18 +767,175 @@ window.sendPOPWhatsApp = function() {
   window.open(`https://wa.me/27729574064?text=${encodeURIComponent('POP attached for Aquapure order. Amount: R' + total.toLocaleString())}`, '_blank');
   closePaymentModal();
 }
+
+// INVOICE GENERATOR
+function buildInvoiceHTML(clientData, items, total, invoiceNum) {
+  const date = new Date().toLocaleDateString('en-ZA');
+  const itemsHTML = items.map(i => `
+    <tr>
+      <td>${i.name}</td>
+      <td style="text-align:center">${i.qty}</td>
+      <td style="text-align:right">R${i.price.toLocaleString()}</td>
+      <td style="text-align:right">R${i.subtotal.toLocaleString()}</td>
+    </tr>
+  `).join('');
+
+  return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Invoice ${invoiceNum}</title>
+    <style>
+      body{font-family:Arial,sans-serif;color:#0f172a;padding:40px}
+     .header{display:flex;justify-content:space-between;margin-bottom:30px}
+     .company h2{margin:0;color:#2563eb}
+     .invoice-info{text-align:right}
+      table{width:100%;border-collapse:collapse;margin:20px 0}
+      th{background:#f8fafc;padding:12px;border-bottom:2px solid #e2e8f0;text-align:left}
+      td{padding:12px;border-bottom:1px solid #e2e8f0}
+     .total-row{font-weight:700;font-size:18px}
+     .footer{margin-top:40px;font-size:12px;color:#64748b}
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="company">
+        <h2>AQUAPURE STILL WATER</h2>
+        <p>Shushumela Ext 2, Next to Batubatse Primary School<br>
+        Tel: 072 957 4064 / 076 935 9392<br>
+        Email: givenwesties09@icloud.com</p>
+      </div>
+      <div class="invoice-info">
+        <h3>INVOICE</h3>
+        <p><strong>No:</strong> ${invoiceNum}<br>
+        <strong>Date:</strong> ${date}</p>
+      </div>
+    </div>
+
+    <div>
+      <p><strong>Bill To:</strong><br>
+      ${clientData.name}<br>
+      ${clientData.phone}<br>
+      ${clientData.email}<br>
+      ${clientData.address}</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th style="text-align:center">Qty</th>
+          <th style="text-align:right">Unit Price</th>
+          <th style="text-align:right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHTML}
+        <tr class="total-row">
+          <td colspan="3" style="text-align:right">TOTAL:</td>
+          <td style="text-align:right">R${total.toLocaleString()}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <p><strong>Bank Details:</strong><br>
+      Standard Bank<br>
+      Account Name: AQUAPURE STILL WATER<br>
+      Account No: 10 26 459 443 4<br>
+            Branch Code: 006145</p>
+      <p>Thank you for choosing Aquapure Still Water!</p>
+    </div>
+  </body>
+  </html>
+  `;
+}
+
+function generateInvoiceData() {
+  if(cart.length === 0) { 
+    alert('Add items to cart first'); 
+    return null; 
+  }
+  
+  const clientName = document.getElementById('clientName').value || 'Customer';
+  const clientPhone = document.getElementById('clientPhone').value || '';
+  const clientEmail = document.getElementById('clientEmail').value || '';
+  const clientAddress = document.getElementById('clientAddress').value || 'Shushumela Ext 2';
+  
+  const total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+  const invoiceNum = 'INV-' + Date.now().toString().slice(-6);
+  
+  return {
+    client: { name: clientName, phone: clientPhone, email: clientEmail, address: clientAddress },
+    items: cart,
+    total: total,
+    invoiceNum: invoiceNum
+  };
+}
+
 window.generateInvoicePDF = function() {
-  if(cart.length === 0) { alert('Add items first'); return; }
-  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  let win = window.open('', '_blank');
-  win.document.write(`<h2>Aquapure Invoice - Total R${total.toLocaleString()}</h2><p>Bank: Standard Bank 10 26 459 443 4 Branch: 006145</p><button onclick="window.print()">Print/Save PDF</button>`);
+  const data = generateInvoiceData();
+  if(!data) return;
+  
+  const win = window.open('', '_blank');
+  win.document.write(buildInvoiceHTML(data.client, data.items, data.total, data.invoiceNum));
   win.document.close();
+  
+  setTimeout(() => {
+    win.print();
+  }, 500);
 }
+
 window.sendInvoiceWhatsApp = function() {
-  let clientName = document.getElementById('clientName').value || 'Customer';
-  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(`Hello ${clientName}, your Aquapure invoice is ready.\nAmount: R${total.toLocaleString()}`)}`, '_blank');
+  const data = generateInvoiceData();
+  if(!data) return;
+  
+  const msg = `Hello ${data.client.name}, your Aquapure invoice is ready.
+  
+Invoice: ${data.invoiceNum}
+Amount: R${data.total.toLocaleString()}
+Email: ${data.client.email || 'N/A'}
+
+Bank Details:
+Standard Bank
+Account: 10 26 459 443 4
+Branch: 006145
+
+Thank you for choosing Aquapure Still Water!`;
+
+  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(msg)}`, '_blank');
 }
+
+window.sendInvoiceEmail = function() {
+  const data = generateInvoiceData();
+  if(!data) return;
+  
+  const email = data.client.email || 'givenwesties09@icloud.com';
+  const subject = encodeURIComponent(`Aquapure Invoice ${data.invoiceNum}`);
+  const body = encodeURIComponent(`Hello ${data.client.name},
+
+Please find your invoice attached/included below.
+
+Invoice Number: ${data.invoiceNum}
+Total Amount: R${data.total.toLocaleString()}
+
+Items:
+${data.items.map(i => `- ${i.name} x${i.qty} = R${i.subtotal.toLocaleString()}`).join('\n')}
+
+Bank Details:
+Standard Bank
+Account Name: AQUAPURE STILL WATER
+Account No: 10 26 459 443 4
+Branch Code: 006145
+
+Thank you for choosing Aquapure Still Water!
+Contact: 072 957 4064 / 076 935 9392
+Email: givenwesties09@icloud.com`);
+
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
+}
+
 window.onclick = function(event) {
   if(event.target.classList.contains('modal')) event.target.style.display = 'none';
 }
