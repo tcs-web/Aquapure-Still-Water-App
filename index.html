@@ -35,7 +35,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .section-title{font-size:18px;margin:20px 0 10px 0;color:var(--accent);border-left:4px solid var(--accent);padding-left:10px}
 .company{font-size:11px;color:var(--muted);text-align:center;margin:20px 0;line-height:1.6}
 .qty-input{width:60px;padding:5px;border:1px solid #ccc;border-radius:4px;text-align:center;margin:0 5px}
-input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
+input[type="text"],input[type="email"],input[type="password"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
 .cart{position:fixed;bottom:0;left:0;right:0;background:var(--card);padding:12px;border-top:3px solid var(--accent);box-shadow:0 -2px 10px rgba(0,0,0,0.15);max-height:300px;overflow-y:auto}
 .cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cart-total{font-size:20px;font-weight:bold;color:var(--green);margin:10px 0}
@@ -48,11 +48,14 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
 .qr-box img{width:180px;height:180px;margin:10px auto;display:block}
 .admin-panel{background:#f0f9ff;padding:10px;border-radius:8px;margin:15px 0;border:2px dashed var(--accent)}
 .admin-panel h4{margin:5px 0;font-size:13px}
-.toggle-btn{background:#6b7280;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:10px;cursor:pointer;margin-left:5px}
+.toggle-btn{background:#6b7280;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:10px;cursor:pointer;margin-left:5px;display:none}
 .copy-box{display:flex;gap:5px;margin-top:8px}
 .copy-box input{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:11px}
 .sync-status{position:fixed;top:70px;right:10px;z-index:999;background:var(--green);color:white;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}
 .admin-only{display:none}
+.password-wrapper{position:relative}
+.password-wrapper button{position:absolute;right:5px;top:8px;background:none;border:none;cursor:pointer;font-size:14px}
+.checkbox-row{display:flex;align-items:center;gap:5px;margin:5px 0;font-size:12px}
 @media(max-width:600px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -75,17 +78,35 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
 
 <div class="container">
 
-<div class="admin-panel admin-only" id="adminPanel">
+<div class="admin-panel" id="adminPanel" style="display:none">
   <h4>⚙️ Admin Controls - Live Sync to All Clients</h4>
-  <button class="btn-secondary" onclick="adminLogin()">🔐 Admin Login</button>
-  <button class="btn-red" onclick="adminLogout()">Logout</button>
-  <button class="btn-secondary" onclick="toggleSpecial()">Toggle Special Banner</button>
-  <button class="btn-green" onclick="copyClientLink()">📤 Send Client Link</button>
-  <div class="copy-box" id="copyBox" style="display:none">
-    <input type="text" id="clientLink" readonly>
-    <button class="btn-whatsapp" onclick="shareWhatsApp()">Share</button>
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm">
+    <input type="email" id="adminEmail" placeholder="Admin Email">
+    <div class="password-wrapper">
+      <input type="password" id="adminPassword" placeholder="Password">
+      <button type="button" onclick="togglePassword()">👁️</button>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="rememberMe">
+      <label for="rememberMe">Remember me</label>
+    </div>
+    <button class="btn btn-blue" onclick="adminLogin()">🔐 Login</button>
   </div>
-  <small style="display:block;margin-top:5px;color:var(--muted)">Stock syncs instantly to all phones</small>
+
+  <!-- ADMIN CONTROLS - hidden until login -->
+  <div id="adminControls" style="display:none;margin-top:10px">
+    <p style="font-size:11px;color:var(--green);margin:5px 0">✅ Logged in as admin</p>
+    <button class="btn-red" onclick="adminLogout()">Logout</button>
+    <button class="btn-secondary" onclick="toggleSpecial()">Toggle Special Banner</button>
+    <button class="btn-green" onclick="copyClientLink()">📤 Send Client Link</button>
+    <div class="copy-box" id="copyBox" style="display:none">
+      <input type="text" id="clientLink" readonly>
+      <button class="btn-whatsapp" onclick="shareWhatsApp()">Share</button>
+    </div>
+    <small style="display:block;margin-top:5px;color:var(--muted)">Stock syncs instantly to all phones</small>
+  </div>
 </div>
 
 <div class="section-title">💧 Bottled Water Packs</div>
@@ -196,7 +217,7 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwZlhYw5jJ1GtzwhmWnk2JC07MpUp1Xpk",
@@ -216,23 +237,54 @@ const auth = getAuth(app);
 let cart = [];
 let isClientMode = window.location.search.includes('client=true');
 
-// ADMIN AUTH
+// SHOW/HIDE PASSWORD
+window.togglePassword = () => {
+  let pwd = document.getElementById('adminPassword');
+  pwd.type = pwd.type === 'password'? 'text' : 'password';
+}
+
+// ADMIN AUTH - with Remember Me
 window.adminLogin = () => {
-  let email = prompt('Admin Email:');
-  let password = prompt('Password:');
-  signInWithEmailAndPassword(auth, email, password)
- .then(() => alert('Logged in!'))
- .catch(err => alert('Login failed: ' + err.message));
+  let email = document.getElementById('adminEmail').value;
+  let password = document.getElementById('adminPassword').value;
+  let remember = document.getElementById('rememberMe').checked;
+
+  let persistence = remember? browserLocalPersistence : browserSessionPersistence;
+
+  setPersistence(auth, persistence)
+ .then(() => signInWithEmailAndPassword(auth, email, password))
+ .then(() => {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('adminControls').style.display = 'block';
+  })
+.catch(err => alert('Login failed: ' + err.message));
 }
 
 window.adminLogout = () => {
   signOut(auth);
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('adminControls').style.display = 'none';
+  document.getElementById('adminEmail').value = '';
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('rememberMe').checked = false;
 }
 
 onAuthStateChanged(auth, user => {
-  document.querySelectorAll('.admin-only').forEach(el => {
-    el.style.display = (user &&!isClientMode)? 'block' : 'none';
-  });
+  if(!isClientMode) {
+    document.getElementById('adminPanel').style.display = 'block';
+    if(user) {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('adminControls').style.display = 'block';
+      document.querySelectorAll('.toggle-btn').forEach(btn => btn.style.display = 'inline-block');
+    } else {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('adminControls').style.display = 'none';
+      document.querySelectorAll('.toggle-btn').forEach(btn => btn.style.display = 'none');
+    }
+  } else {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.style.display = 'none');
+  }
 });
 
 // LIVE SYNC
