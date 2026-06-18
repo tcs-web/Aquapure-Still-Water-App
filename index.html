@@ -471,11 +471,25 @@ input:focus{
     <button class="btn-red" onclick="adminLogout()">Logout</button>
     <button class="btn-secondary" onclick="toggleSpecial()">Toggle Special Banner</button>
     <button class="btn-green" onclick="copyClientLink()">📤 Send Client Link</button>
+    
     <div class="copy-box" id="copyBox" style="display:none">
       <input type="text" id="clientLink" readonly>
       <button class="btn-whatsapp" onclick="shareWhatsApp()">Share</button>
     </div>
-    <small style="display:block;margin-top:5px;color:var(--muted)">Stock syncs instantly to all phones</small>
+
+    <!-- INVOICE GENERATOR - Admin Only -->
+    <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
+      <h4 style="margin:0 0 10px; color:var(--purple);">🧾 Invoice Generator</h4>
+      <input type="text" id="clientName" placeholder="Client/Shop Name">
+      <input type="text" id="clientPhone" placeholder="Client Phone">
+      <input type="email" id="clientEmail" placeholder="Client Email">
+      <input type="text" id="clientAddress" placeholder="Delivery Address - Shushumela Ext 2">
+      <button class="btn btn-purple" onclick="generateInvoicePDF()">📄 Generate Invoice PDF</button>
+      <button class="btn btn-whatsapp" onclick="sendInvoiceWhatsApp()">📱 Send Invoice via WhatsApp</button>
+      <button class="btn btn-blue" onclick="sendInvoiceEmail()">✉️ Send Invoice via Email</button>
+    </div>
+    
+    <small style="display:block;margin-top:10px;color:var(--muted)">Stock syncs instantly to all phones</small>
   </div>
 </div>
 
@@ -533,18 +547,6 @@ input:focus{
   <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="custom" value="0" min="0"></div>
   <button class="btn" id="btnCustom" onclick="addToCart('Custom Bottled Water', 0, 'custom')">Request Quote</button>
 </div>
-</div>
-
-<div class="section-title admin-only">🧾 Invoice Generator</div>
-<div class="card">
-  <h3>Create Invoice for Client</h3>
-  <input type="text" id="clientName" placeholder="Client/Shop Name">
-  <input type="text" id="clientPhone" placeholder="Client Phone">
-  <input type="email" id="clientEmail" placeholder="Client Email">
-  <input type="text" id="clientAddress" placeholder="Delivery Address - Shushumela Ext 2">
-  <button class="btn btn-purple" onclick="generateInvoicePDF()">📄 Generate Invoice PDF</button>
-  <button class="btn btn-whatsapp" onclick="sendInvoiceWhatsApp()">📱 Send Invoice via WhatsApp</button>
-  <button class="btn btn-blue" onclick="sendInvoiceEmail()">✉️ Send Invoice via Email</button>
 </div>
 
 <div class="company">
