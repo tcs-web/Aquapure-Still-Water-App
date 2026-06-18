@@ -36,14 +36,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .company{font-size:11px;color:var(--muted);text-align:center;margin:20px 0;line-height:1.6}
 .qty-input{width:60px;padding:5px;border:1px solid #ccc;border-radius:4px;text-align:center;margin:0 5px}
 input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
-
-/* FIXED CART */
 .cart{position:fixed;bottom:0;left:0;right:0;background:var(--card);padding:12px;border-top:3px solid var(--accent);box-shadow:0 -2px 10px rgba(0,0,0,0.15);max-height:300px;overflow-y:auto}
 .cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cart-total{font-size:20px;font-weight:bold;color:var(--green);margin:10px 0}
 .cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px dashed #ddd;font-size:12px;background:#f8fafc;border-radius:6px;margin-bottom:5px}
-
-/* Modal Styles */
 .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5)}
 .modal-content{background:var(--card);margin:5% auto;padding:20px;border-radius:12px;width:90%;max-width:500px;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
 .close{float:right;font-size:24px;cursor:pointer}
@@ -56,7 +52,7 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
 .copy-box{display:flex;gap:5px;margin-top:8px}
 .copy-box input{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:11px}
 .sync-status{position:fixed;top:70px;right:10px;z-index:999;background:var(--green);color:white;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}
-.admin-only{display:block}
+.admin-only{display:none}
 @media(max-width:600px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -79,9 +75,10 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
 
 <div class="container">
 
-<!-- ADMIN PANEL - HIDDEN IN CLIENT MODE -->
 <div class="admin-panel admin-only" id="adminPanel">
   <h4>⚙️ Admin Controls - Live Sync to All Clients</h4>
+  <button class="btn-secondary" onclick="adminLogin()">🔐 Admin Login</button>
+  <button class="btn-red" onclick="adminLogout()">Logout</button>
   <button class="btn-secondary" onclick="toggleSpecial()">Toggle Special Banner</button>
   <button class="btn-green" onclick="copyClientLink()">📤 Send Client Link</button>
   <div class="copy-box" id="copyBox" style="display:none">
@@ -93,7 +90,6 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
 
 <div class="section-title">💧 Bottled Water Packs</div>
 <div class="grid">
-
 <div class="card" id="water500" data-id="water500">
   <button class="toggle-btn admin-only" onclick="toggleStock('water500')">OOS</button>
   <img src="https://files.catbox.moe/84yxvh.jpg" alt="Aquapure 500ml">
@@ -123,12 +119,10 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
   <div style="margin-top:8px">Bottles: <input type="number" class="qty-input" id="aq20l" value="0" min="0"></div>
   <button class="btn" id="btn20L" onclick="addToCart('Aquapure 20L Bottle', 35, 'aq20l')">Add to Order</button>
 </div>
-
 </div>
 
 <div class="section-title">🔄 Our Services</div>
 <div class="grid">
-
 <div class="card" id="serviceRefill" data-id="serviceRefill">
   <button class="toggle-btn admin-only" onclick="toggleStock('serviceRefill')">OOS</button>
   <img src="https://files.catbox.moe/6037ft.jpg" alt="Water Refill">
@@ -148,10 +142,8 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
   <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="custom" value="0" min="0"></div>
   <button class="btn" id="btnCustom" onclick="addToCart('Custom Bottled Water', 0, 'custom')">Request Quote</button>
 </div>
-
 </div>
 
-<!-- INVOICE GENERATOR - ADMIN ONLY -->
 <div class="section-title admin-only">🧾 Invoice Generator</div>
 <div class="card admin-only">
   <h3>Create Invoice for Client</h3>
@@ -169,10 +161,8 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
   <b>Hours:</b> 9am - 19:00pm | Open Daily<br>
   <b>Slogan:</b> HYDRATE. REFRESH. LIVE PURE.
 </div>
-
 </div>
 
-<!-- CART WITH CANCEL + QR -->
 <div class="cart" id="cartBox" style="display:none">
   <div class="cart-header">
     <div><b>Your Order:</b> <span id="cartItems">0 items</span></div>
@@ -184,7 +174,6 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
   <button class="btn btn-blue" onclick="openPaymentModal()">💳 Pay with QR/EFT</button>
 </div>
 
-<!-- EFT + QR Payment Modal -->
 <div id="paymentModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closePaymentModal()">&times;</span>
@@ -204,29 +193,48 @@ input[type="text"]{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;bor
   </div>
 </div>
 
-<!-- Firebase SDK + Live Sync -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-// YOUR FIREBASE CONFIG
 const firebaseConfig = {
-  apiKey: "AIzaSyAE-2ZlY3dPKKWNNQIYt6SG846BboS5-VI",
-  authDomain: "twinz-catalog.firebaseapp.com",
-  databaseURL: "https://twinz-catalog-default-rtdb.firebaseio.com",
-  projectId: "twinz-catalog",
-  storageBucket: "twinz-catalog.firebasestorage.app",
-  messagingSenderId: "472687488237",
-  appId: "1:472687488237:web:bc0164733c283da59a30e4"
-};
+  apiKey: "PASTE_AQUAPURE_API_KEY",
+  authDomain: "aquapure-still-water.firebaseapp.com",
+  databaseURL: "https://aquapure-still-water-default-rtdb.europe-west4.firebasedatabase.app",
+  projectId: "aquapure-still-water",
+  storageBucket: "aquapure-still-water.firebasestorage.app",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
 let cart = [];
 let isClientMode = window.location.search.includes('client=true');
 
-// LISTEN FOR REALTIME CHANGES
+// ADMIN AUTH
+window.adminLogin = () => {
+  let email = prompt('Admin Email:');
+  let password = prompt('Password:');
+  signInWithEmailAndPassword(auth, email, password)
+  .then(() => alert('Logged in!'))
+  .catch(err => alert('Login failed: ' + err.message));
+}
+
+window.adminLogout = () => {
+  signOut(auth);
+}
+
+onAuthStateChanged(auth, user => {
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = (user &&!isClientMode)? 'block' : 'none';
+  });
+});
+
+// LIVE SYNC
 const specialRef = ref(db, 'aquapure/special');
 const stockRef = ref(db, 'aquapure/stock');
 
@@ -261,8 +269,7 @@ window.toggleSpecial = function() {
 }
 
 window.toggleStock = function(cardId) {
-  let card = document.getElementById(cardId);
-  let isOOS = card.classList.contains('oos');
+  let isOOS = document.getElementById(cardId).classList.contains('oos');
   set(ref(db, 'aquapure/stock/' + cardId),!isOOS);
 }
 
@@ -273,23 +280,22 @@ window.copyClientLink = function() {
   document.getElementById('copyBox').style.display = 'flex';
   document.getElementById('clientLink').select();
   document.execCommand('copy');
-  alert('Client link copied! Aquapure catalog syncs live.');
+  alert('Client link copied!');
 }
 
 window.shareWhatsApp = function() {
   let clientUrl = document.getElementById('clientLink').value;
-  window.open(`https://wa.me/?text=${encodeURIComponent('Order Aquapure Still Water here: ' + clientUrl + '\n\nPure and Fresh Drinking Water')}`, '_blank');
+  window.open(`https://wa.me/?text=${encodeURIComponent('Order Aquapure Still Water: ' + clientUrl)}`, '_blank');
 }
 
-// CART FUNCTIONS
+// CART
 window.addToCart = function(name, price, qtyId) {
   let qty = parseInt(document.getElementById(qtyId).value);
   if(price === 0) {
-    window.open(`https://wa.me/27729574064?text=${encodeURIComponent('Hi Aquapure, I need a quote for: ' + name)}`, '_blank');
+    window.open(`https://wa.me/27729574064?text=${encodeURIComponent('Hi Aquapure, quote for: ' + name)}`, '_blank');
     return;
   }
   if(qty <= 0) { alert('Enter quantity first'); return; }
-
   let existing = cart.find(item => item.name === name);
   if(existing) {
     existing.qty += qty;
@@ -297,75 +303,44 @@ window.addToCart = function(name, price, qtyId) {
   } else {
     cart.push({name, price, qty, subtotal: price * qty});
   }
-
   updateCart();
   document.getElementById(qtyId).value = 0;
-  alert(name + ' x' + qty + ' added');
 }
 
 function updateCart() {
   let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
   let itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
-
   document.getElementById('cartItems').innerText = itemCount + ' items';
   document.getElementById('cartTotal').innerText = total.toLocaleString();
   document.getElementById('qrAmount').innerText = total.toLocaleString();
   document.getElementById('cartBox').style.display = cart.length > 0? 'block' : 'none';
-
   document.getElementById('qrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Beneficiary:AQUAPURE%20STILL%20WATER%0AAccount:10264594434%0ABranch:006145%0AAmount:${total}`;
-
   let listHTML = cart.map((item, index) => `
     <div class="cart-item">
-      <div style="flex:1">
-        <b>${item.name}</b><br>
-        <small>${item.qty} x R${item.price.toLocaleString()} = R${item.subtotal.toLocaleString()}</small>
-      </div>
+      <div style="flex:1"><b>${item.name}</b><br><small>${item.qty} x R${item.price.toLocaleString()} = R${item.subtotal.toLocaleString()}</small></div>
       <button class="btn-red" onclick="removeItem(${index})">Remove</button>
-    </div>
-  `).join('');
-
+    </div>`).join('');
   document.getElementById('cartList').innerHTML = listHTML;
 }
 
-window.removeItem = function(index) {
-  cart.splice(index, 1);
-  updateCart();
-}
-
-window.clearCart = function() {
-  if(confirm('Cancel entire order?')) {
-    cart = [];
-    updateCart();
-  }
-}
-
+window.removeItem = function(index) { cart.splice(index, 1); updateCart(); }
+window.clearCart = function() { if(confirm('Cancel entire order?')) { cart = []; updateCart(); } }
 window.sendWhatsAppOrder = function() {
   if(cart.length === 0) return;
   let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  let orderText = 'Hello Aquapure Still Water, new order:\n\n';
-  cart.forEach(item => {
-    orderText += `• ${item.name}\n Qty: ${item.qty} | R${item.subtotal.toLocaleString()}\n\n`;
-  });
-  orderText += `TOTAL: R${total.toLocaleString()}\n\nName: \nAddress: Shushumela Ext 2\nPhone: `;
+  let orderText = 'Hello Aquapure, new order:\n\n' + cart.map(i=>`• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}\n`).join('') + `TOTAL: R${total.toLocaleString()}\n\nName: \nAddress: Shushumela Ext 2\nPhone: `;
   window.open(`https://wa.me/27729574064?text=${encodeURIComponent(orderText)}`, '_blank');
 }
-
 window.openPaymentModal = function() {
   if(cart.length === 0) { alert('Add items to cart first'); return; }
   document.getElementById('paymentModal').style.display = 'block';
 }
-
-window.closePaymentModal = function() {
-  document.getElementById('paymentModal').style.display = 'none';
-}
-
+window.closePaymentModal = function() { document.getElementById('paymentModal').style.display = 'none'; }
 window.sendPOPWhatsApp = function() {
   let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  let msg = 'POP attached for Aquapure order.\nAmount: R' + total.toLocaleString();
-  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open(`https://wa.me/27729574064?text=${encodeURIComponent('POP attached for Aquapure order. Amount: R' + total.toLocaleString())}`, '_blank');
   closePaymentModal();
 }
-
 window.generateInvoicePDF = function() {
   if(cart.length === 0) { alert('Add items first'); return; }
   let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
@@ -373,24 +348,14 @@ window.generateInvoicePDF = function() {
   win.document.write(`<h2>Aquapure Invoice - Total R${total.toLocaleString()}</h2><p>Bank: Standard Bank 10 26 459 443 4 Branch: 006145</p><button onclick="window.print()">Print/Save PDF</button>`);
   win.document.close();
 }
-
 window.sendInvoiceWhatsApp = function() {
   let clientName = document.getElementById('clientName').value || 'Customer';
-  let msg = `Hello ${clientName}, your Aquapure invoice is ready.\nAmount: R${cart.reduce((sum, item) => sum + item.subtotal, 0).toLocaleString()}`;
-  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(msg)}`, '_blank');
+  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(`Hello ${clientName}, your Aquapure invoice is ready.\nAmount: R${total.toLocaleString()}`)}`, '_blank');
 }
-
 window.onclick = function(event) {
-  if(event.target.classList.contains('modal')) {
-    event.target.style.display = 'none';
-  }
-}
-
-// INIT - Hide admin in client mode
-if(isClientMode) {
-  document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+  if(event.target.classList.contains('modal')) event.target.style.display = 'none';
 }
 </script>
-
 </body>
 </html>
