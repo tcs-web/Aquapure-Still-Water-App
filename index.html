@@ -31,7 +31,6 @@ body{
   color:var(--text);
   margin:0;
   padding:0;
-  padding-bottom:220px;
   -webkit-font-smoothing:antialiased;
 }
 
@@ -81,7 +80,7 @@ body{
 .special-banner.show{display:block}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
-.container{padding:20px 15px;max-width:1000px;margin:0 auto}
+.container{padding:20px 15px 240px 15px;max-width:1000px;margin:0 auto}
 
 .badge{
   background:var(--green);
@@ -949,15 +948,17 @@ Email: givenwesties09@icloud.com`);
   window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
 }  
 
-// Load products from Firebase and build editor
+// Load products from Firebase - CLIENT SAFE
 onValue(productsRef, (snapshot) => {
   let products = snapshot.val() || {};
-  buildProductEditor(products);
-
-  // Also update product prices on client cards live
-  updateProductPrices(products);
+  if(Object.keys(products).length === 0) return; // don't crash if Firebase empty
+  
+  updateProductPrices(products); // update cards for everyone
+  
+  if(!isClientMode) { // only build editor for admin
+    buildProductEditor(products);
+  }
 });
-
 function buildProductEditor(products) {
   const editor = document.getElementById('productEditor');
   const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
