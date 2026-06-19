@@ -427,6 +427,7 @@ input:focus{
 .grid{grid-template-columns:1fr}
 .header h1{font-size:21px}
 .card img{height:180px}
+} /* <-- add this */
 </style>
 </head>
 <body>
@@ -674,7 +675,8 @@ onAuthStateChanged(auth, user => {
 // LIVE SYNC
 const specialRef = ref(db, 'aquapure/special');
 const stockRef = ref(db, 'aquapure/stock');
-
+const productsRef = ref(db, 'aquapure/products');
+  
 onValue(specialRef, (snapshot) => {
   let isActive = snapshot.val();
   document.getElementById('specialBanner').classList.toggle('show', isActive);
@@ -945,8 +947,85 @@ Contact: 072 957 4064 / 076 935 9392
 Email: givenwesties09@icloud.com`);
 
   window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
+}  
+
+// Load products from Firebase and build editor
+onValue(productsRef, (snapshot) => {
+  let products = snapshot.val() || {};
+  buildProductEditor(products);
+
+  // Also update product prices on client cards live
+  updateProductPrices(products);
+});
+
+function buildProductEditor(products) {
+  const editor = document.getElementById('productEditor');
+  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
+
+  let html = '';
+  productIds.forEach(id => {
+    const card = document.getElementById(id);
+    const name = card.querySelector('h3').innerText;
+    const priceEl = card.querySelector('.price');
+    const price = priceEl? parseInt(priceEl.innerText.replace(/\D/g,'')) : 0;
+    const oldPriceEl = card.querySelector('.old-price');
+    const oldPrice = oldPriceEl? parseInt(oldPriceEl.innerText.replace(/\D/g,'')) : 0;
+
+    const data = products[id] || {name: name, price: price, oldPrice: oldPrice};
+
+    html += `
+      <div style="background:#fff;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
+        <b style="font-size:12px">${id}</b><br>
+        <input type="text" id="name_${id}" value="${data.name}" placeholder="Product Name" style="margin:4px 0">
+        <input type="number" id="price_${id}" value="${data.price}" placeholder="Price R" style="margin:4px 0">
+        <input type="number" id="oldPrice_${id}" value="${data.oldPrice || ''}" placeholder="Old Price R - optional" style="margin:4px 0">
+      </div>
+    `;
+  });
+  editor.innerHTML = html;
 }
 
+function updateProductPrices(products) {
+  Object.keys(products).forEach(id => {
+    const card = document.getElementById(id);
+    if(!card) return;
+    const data = products[id];
+    card.querySelector('h3').innerText = data.name;
+    const priceEl = card.querySelector('.price');
+    if(priceEl) priceEl.innerText = `R${data.price}${id==='water20L'? '/bottle' : id==='serviceRefill'? '/20L' : '/case'}`;
+
+    const oldPriceEl = card.querySelector('.old-price');
+    if(oldPriceEl && data.oldPrice) {
+      oldPriceEl.innerText = `R${data.oldPrice}`;
+      oldPriceEl.style.display = 'inline';
+    } else if(oldPriceEl) {
+      oldPriceEl.style.display = 'none';
+    }
+  });
+}
+
+window.saveProducts = function() {
+  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
+  const updates = {};
+
+  productIds.forEach(id => {
+    const name = document.getElementById(`name_${id}`).value;
+    const price = parseInt(document.getElementById(`price_${id}`).value);
+    const oldPrice = parseInt(document.getElementById(`oldPrice_${id}`).value) || 0;
+
+    if(!name ||!price) {
+      alert('Name and Price required for all products');
+      return;
+    }
+
+    updates[id] = {name, price, oldPrice};
+  });
+
+  set(productsRef, updates)
+   .then(() => alert('✅ Products updated! All clients see changes instantly'))
+   .catch(err => alert('Error: ' + err.message));
+}
+  
 window.onclick = function(event) {
   if(event.target.classList.contains('modal')) event.target.style.display = 'none';
 }
