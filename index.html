@@ -948,16 +948,18 @@ Email: givenwesties09@icloud.com`);
   window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
 }  
 
-// Load products from Firebase - CLIENT SAFE
+// Load products from Firebase - BULLETPROOF FOR CLIENT MODE
 onValue(productsRef, (snapshot) => {
-  let products = snapshot.val() || {};
-  if(Object.keys(products).length === 0) return; // don't crash if Firebase empty
-  
-  updateProductPrices(products); // update cards for everyone
-  
-  if(!isClientMode) { // only build editor for admin
-    buildProductEditor(products);
+  try {
+    let products = snapshot.val() || {};
+    updateProductPrices(products);
+    if(!isClientMode) {
+      buildProductEditor(products);
+    }
+  } catch(e) {
+    console.log('Firebase products error:', e);
   }
+  document.getElementById('syncStatus').innerText = '🟢 Synced ' + new Date().toLocaleTimeString();
 });
 function buildProductEditor(products) {
   const editor = document.getElementById('productEditor');
@@ -987,20 +989,36 @@ function buildProductEditor(products) {
 }
 
 function updateProductPrices(products) {
+  if(!products || Object.keys(products).length === 0) return; // safety check
+
   Object.keys(products).forEach(id => {
     const card = document.getElementById(id);
     if(!card) return;
-    const data = products[id];
-    card.querySelector('h3').innerText = data.name;
-    const priceEl = card.querySelector('.price');
-    if(priceEl) priceEl.innerText = `R${data.price}${id==='water20L'? '/bottle' : id==='serviceRefill'? '/20L' : '/case'}`;
 
-    const oldPriceEl = card.querySelector('.old-price');
-    if(oldPriceEl && data.oldPrice) {
-      oldPriceEl.innerText = `R${data.oldPrice}`;
-      oldPriceEl.style.display = 'inline';
-    } else if(oldPriceEl) {
-      oldPriceEl.style.display = 'none';
+    const data = products[id];
+    if(!data) return; // skip if product missing
+
+    try {
+      const h3 = card.querySelector('h3');
+      if(h3 && data.name) h3.innerText = data.name;
+
+      const priceEl = card.querySelector('.price');
+      if(priceEl && data.price) {
+        let suffix = id==='water20L'? '/bottle' : id==='serviceRefill'? '/20L' : '/case';
+        priceEl.innerText = `R${data.price}${suffix}`;
+      }
+
+      const oldPriceEl = card.querySelector('.old-price');
+      if(oldPriceEl) {
+        if(data.oldPrice && data.oldPrice > 0) {
+          oldPriceEl.innerText = `R${data.oldPrice}`;
+          oldPriceEl.style.display = 'inline';
+        } else {
+          oldPriceEl.style.display = 'none';
+        }
+      }
+    } catch(e) {
+      console.log('Update price error for', id, e);
     }
   });
 }
