@@ -511,7 +511,7 @@ input:focus{
   <p>Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply</p>
   <div><span class="price">R120/case</span> <span class="old-price">R144</span></div>
   <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq500" value="0" min="0"></div>
-  <button class="btn" id="btn500" onclick="addToCart('Aquapure 500ml x24', 120, 'aq500')">Add to Order</button>
+  <button class="btn" id="btn500">Add to Order</button>
 </div>
 
 <div class="card" id="water5L" data-id="water5L">
@@ -521,7 +521,7 @@ input:focus{
   <p>High-quality purified water<br>For homes & businesses<br>Free delivery included</p>
   <div><span class="price">R160/case</span> <span class="old-price">R200</span></div>
   <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq5l" value="0" min="0"></div>
-  <button class="btn" id="btn5L" onclick="addToCart('Aquapure 5L x4', 160, 'aq5l')">Add to Order</button>
+  <button class="btn" id="btn5L">Add to Order</button>
 </div>
 
 <div class="card" id="water20L" data-id="water20L">
@@ -531,7 +531,7 @@ input:focus{
   <p>Office cooler refill<br>Same day service<br>Container exchange available</p>
   <div><span class="price">R35/bottle</span></div>
   <div style="margin-top:8px">Bottles: <input type="number" class="qty-input" id="aq20l" value="0" min="0"></div>
-  <button class="btn" id="btn20L" onclick="addToCart('Aquapure 20L Bottle', 35, 'aq20l')">Add to Order</button>
+  <button class="btn" id="btn20L">Add to Order</button>
 </div>
 </div>
 
@@ -544,7 +544,7 @@ input:focus{
   <p>Bring your own container<br>High-quality purified water<br>For everyday needs</p>
   <div><span class="price">R25/20L</span></div>
   <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="refill" value="0" min="0"></div>
-  <button class="btn" id="btnRefill" onclick="addToCart('20L Water Refill', 25, 'refill')">Add to Order</button>
+  <button class="btn" id="btnRefill">Add to Order</button>
 </div>
 
 <div class="card" id="serviceCustom" data-id="serviceCustom">
@@ -554,7 +554,7 @@ input:focus{
   <p>Events, Weddings, Parties<br>Funerals and more<br>Custom labels available</p>
   <div><span class="price">Quote on request</span></div>
   <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="custom" value="0" min="0"></div>
-  <button class="btn" id="btnCustom" onclick="addToCart('Custom Bottled Water', 0, 'custom')">Request Quote</button>
+  <button class="btn" id="btnCustom">Request Quote</button>
 </div>
 </div>
 
@@ -948,10 +948,55 @@ Email: givenwesties09@icloud.com`);
   window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
 }  
 
-// Load products from Firebase - BULLETPROOF FOR CLIENT MODE
+// Default products - used if Firebase is empty
+const defaultProducts = {
+  water500: {
+    name: "Aquapure 500ml x24 Case",
+    price: 120,
+    oldPrice: 144,
+    img: "https://files.catbox.moe/84yxvh.jpg",
+    desc: "Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply"
+  },
+  water5L: {
+    name: "Aquapure 5L x4 Case",
+    price: 160,
+    oldPrice: 200,
+    img: "https://files.catbox.moe/hdmlkp.jpg",
+    desc: "High-quality purified water<br>For homes & businesses<br>Free delivery included"
+  },
+  water20L: {
+    name: "Aquapure 20L Bottle",
+    price: 35,
+    oldPrice: 0,
+    img: "https://files.catbox.moe/zjszp8.jpg",
+    desc: "Office cooler refill<br>Same day service<br>Container exchange available"
+  },
+  serviceRefill: {
+    name: "Purified Water Refill",
+    price: 25,
+    oldPrice: 0,
+    img: "https://files.catbox.moe/6037ft.jpg",
+    desc: "Bring your own container<br>High-quality purified water<br>For everyday needs"
+  },
+  serviceCustom: {
+    name: "Custom Bottled Water",
+    price: 0,
+    oldPrice: 0,
+    img: "https://files.catbox.moe/iakdw9.jpg",
+    desc: "Events, Weddings, Parties<br>Funerals and more<br>Custom labels available"
+  }
+};
+
+// Load products from Firebase
 onValue(productsRef, (snapshot) => {
   try {
-    let products = snapshot.val() || {};
+    let products = snapshot.val();
+
+    if(!products || Object.keys(products).length === 0) {
+      products = defaultProducts;
+      set(productsRef, defaultProducts);
+    }
+
     updateProductPrices(products);
     if(!isClientMode) {
       buildProductEditor(products);
@@ -961,51 +1006,29 @@ onValue(productsRef, (snapshot) => {
   }
   document.getElementById('syncStatus').innerText = '🟢 Synced ' + new Date().toLocaleTimeString();
 });
-function buildProductEditor(products) {
-  const editor = document.getElementById('productEditor');
-  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
-
-  let html = '';
-  productIds.forEach(id => {
-    const card = document.getElementById(id);
-    const name = card.querySelector('h3').innerText;
-    const priceEl = card.querySelector('.price');
-    const price = priceEl? parseInt(priceEl.innerText.replace(/\D/g,'')) : 0;
-    const oldPriceEl = card.querySelector('.old-price');
-    const oldPrice = oldPriceEl? parseInt(oldPriceEl.innerText.replace(/\D/g,'')) : 0;
-
-    const data = products[id] || {name: name, price: price, oldPrice: oldPrice};
-
-    html += `
-      <div style="background:#fff;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
-        <b style="font-size:12px">${id}</b><br>
-        <input type="text" id="name_${id}" value="${data.name}" placeholder="Product Name" style="margin:4px 0">
-        <input type="number" id="price_${id}" value="${data.price}" placeholder="Price R" style="margin:4px 0">
-        <input type="number" id="oldPrice_${id}" value="${data.oldPrice || ''}" placeholder="Old Price R - optional" style="margin:4px 0">
-      </div>
-    `;
-  });
-  editor.innerHTML = html;
-}
 
 function updateProductPrices(products) {
-  if(!products || Object.keys(products).length === 0) return; // safety check
-
   Object.keys(products).forEach(id => {
     const card = document.getElementById(id);
     if(!card) return;
 
     const data = products[id];
-    if(!data) return; // skip if product missing
+    if(!data) return;
 
     try {
+      const img = card.querySelector('img');
+      if(img && data.img) img.src = data.img;
+
       const h3 = card.querySelector('h3');
       if(h3 && data.name) h3.innerText = data.name;
 
+      const p = card.querySelector('p');
+      if(p && data.desc) p.innerHTML = data.desc;
+
       const priceEl = card.querySelector('.price');
-      if(priceEl && data.price) {
+      if(priceEl && data.price!== undefined) {
         let suffix = id==='water20L'? '/bottle' : id==='serviceRefill'? '/20L' : '/case';
-        priceEl.innerText = `R${data.price}${suffix}`;
+        priceEl.innerText = data.price === 0? 'Quote on request' : `R${data.price}${suffix}`;
       }
 
       const oldPriceEl = card.querySelector('.old-price');
@@ -1017,34 +1040,67 @@ function updateProductPrices(products) {
           oldPriceEl.style.display = 'none';
         }
       }
+
+      const btn = card.querySelector('.btn');
+      const qtyInput = card.querySelector('.qty-input');
+      if(btn && qtyInput) {
+        btn.onclick = () => addToCart(data.name, data.price, qtyInput.id);
+      }
     } catch(e) {
       console.log('Update price error for', id, e);
     }
   });
 }
 
+function buildProductEditor(products) {
+  const editor = document.getElementById('productEditor');
+  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
+
+  let html = '';
+  productIds.forEach(id => {
+    const data = products[id] || defaultProducts[id];
+    html += `
+      <div style="background:#fff;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
+        <b style="font-size:12px">${id}</b><br>
+        <input type="text" id="name_${id}" value="${data.name}" placeholder="Product Name" style="margin:4px 0">
+        <input type="text" id="img_${id}" value="${data.img || ''}" placeholder="Image URL" style="margin:4px 0">
+        <textarea id="desc_${id}" placeholder="Description" style="margin:4px 0;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;">${(data.desc || '').replace(/<br>/g, '\n')}</textarea>
+        <input type="number" id="price_${id}" value="${data.price}" placeholder="Price R" style="margin:4px 0">
+        <input type="number" id="oldPrice_${id}" value="${data.oldPrice || ''}" placeholder="Old Price R - optional" style="margin:4px 0">
+      </div>
+    `;
+  });
+  editor.innerHTML = html;
+}
+
 window.saveProducts = function() {
   const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
   const updates = {};
+  let hasError = false;
 
   productIds.forEach(id => {
-    const name = document.getElementById(`name_${id}`).value;
-    const price = parseInt(document.getElementById(`price_${id}`).value);
-    const oldPrice = parseInt(document.getElementById(`oldPrice_${id}`).value) || 0;
+    const name = document.getElementById(`name_${id}`)?.value.trim();
+    const img = document.getElementById(`img_${id}`)?.value.trim();
+    const desc = document.getElementById(`desc_${id}`)?.value.replace(/\n/g, '<br>').trim();
+    const price = parseInt(document.getElementById(`price_${id}`)?.value);
+    const oldPrice = parseInt(document.getElementById(`oldPrice_${id}`)?.value) || 0;
 
-    if(!name ||!price) {
-      alert('Name and Price required for all products');
+    if(!name || price === undefined || price < 0) {
+      alert(`Name and valid Price required for ${id}`);
+      hasError = true;
       return;
     }
 
-    updates[id] = {name, price, oldPrice};
+    updates[id] = {name, img, desc, price, oldPrice};
   });
 
+  if(hasError) return;
+
   set(productsRef, updates)
-   .then(() => alert('✅ Products updated! All clients see changes instantly'))
-   .catch(err => alert('Error: ' + err.message));
+ .then(() => alert('✅ Products updated! All clients see changes instantly'))
+ .catch(err => alert('Error: ' + err.message));
 }
-  
+
 window.onclick = function(event) {
   if(event.target.classList.contains('modal')) event.target.style.display = 'none';
 }
