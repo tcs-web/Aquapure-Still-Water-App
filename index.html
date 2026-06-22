@@ -3,609 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aquapure Still Water - Wholesale Catalog</title>
+<title>Aquapure Admin - Wholesale Catalog</title>
 <style>
+/* Keep all your CSS exactly the same */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-:root{
-  --bg:#f8fafc;
-  --card:#ffffff;
-  --accent:#2563eb;
-  --accent-dark:#1e40af;
-  --green:#16a34a;
-  --red:#dc2626;
-  --blue:#1e40af;
-  --purple:#7c3aed;
-  --text:#0f172a;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --shadow:0 1px 3px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.05);
-  --shadow-lg:0 10px 40px rgba(37,99,235,0.15);
-  --gradient:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);
-}
-
-*{box-sizing:border-box}
-body{
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  margin:0;
-  padding:0;
-  -webkit-font-smoothing:antialiased;
-}
-
-.header{
-  background:var(--gradient);
-  color:white;
-  padding:25px 15px;
-  text-align:center;
-  position:relative;
-  box-shadow:var(--shadow-lg);
-}
-.logo{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  background:white;
-  padding:6px;
-  margin:0 auto 12px;
-  border:3px solid rgba(255,255,255,0.3);
-  object-fit:cover;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-}
-.header h1{
-  margin:0;
-  font-size:24px;
-  font-weight:700;
-  letter-spacing:-0.5px;
-}
-.header p{
-  margin:8px 0 0;
-  font-size:13px;
-  opacity:0.9;
-  font-weight:400;
-}
-
-.special-banner{
-  background:linear-gradient(90deg,#dbeafe,#eff6ff);
-  color:var(--accent-dark);
-  padding:12px;
-  text-align:center;
-  font-weight:600;
-  font-size:13px;
-  border-bottom:3px solid var(--accent);
-  display:none;
-  animation:slideDown 0.3s ease;
-}
-.special-banner.show{display:block}
-@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
-.container{padding:20px 15px 240px 15px;max-width:1000px;margin:0 auto}
-
-.badge{
-  background:var(--green);
-  color:white;
-  padding:5px 10px;
-  border-radius:20px;
-  font-size:11px;
-  display:inline-block;
-  margin:3px;
-  font-weight:600;
-  letter-spacing:0.3px;
-}
-.badge.blue{background:var(--accent)}
-
-.card{
-  background:var(--card);
-  border-radius:16px;
-  padding:16px;
-  margin:14px 0;
-  box-shadow:var(--shadow);
-  position:relative;
-  border:1px solid var(--border);
-  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-}
-.card:hover{
-  box-shadow:var(--shadow-lg);
-  transform:translateY(-2px);
-}
-.card.oos{opacity:0.4;filter:grayscale(0.5)}
-.card.oos::after{
-  content:'OUT OF STOCK';
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%) rotate(-12deg);
-  background:var(--red);
-  color:white;
-  padding:10px 24px;
-  font-weight:700;
-  border-radius:8px;
-  font-size:14px;
-  z-index:10;
-  box-shadow:0 4px 12px rgba(220,38,38,0.4);
-  letter-spacing:1px;
-}
-
-.card img{
-  width:100%;
-  height:200px;
-  object-fit:cover;
-  border-radius:12px;
-  margin-bottom:12px;
-  border:1px solid var(--border);
-}
-
-.card h3{
-  margin:8px 0;
-  color:var(--accent);
-  font-size:17px;
-  font-weight:700;
-  letter-spacing:-0.3px;
-}
-
-.card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
-  margin:6px 0 10px;
-}
-
-.price{
-  font-size:20px;
-  font-weight:700;
-  color:var(--green);
-  letter-spacing:-0.5px;
-}
-.old-price{
-  text-decoration:line-through;
-  color:var(--muted);
-  font-size:13px;
-  margin-left:6px;
-  font-weight:500;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:16px;
-}
-
-.btn{
-  background:var(--gradient);
-  color:white;
-  border:none;
-  padding:12px 18px;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
-  width:100%;
-  margin-top:10px;
-  font-size:14px;
-  transition:all 0.2s;
-  box-shadow:0 4px 12px rgba(37,99,235,0.3);
-}
-.btn:hover:not(:disabled){
-  transform:translateY(-1px);
-  box-shadow:0 6px 16px rgba(37,99,235,0.4);
-}
-.btn:active:not(:disabled){transform:translateY(0)}
-.btn:disabled{
-  background:var(--muted);
-  cursor:not-allowed;
-  box-shadow:none;
-  transform:none;
-}
-
-.btn-whatsapp{background:linear-gradient(135deg,#25D366,#128C7E)}
-.btn-secondary{background:#475569;font-size:13px;box-shadow:none}
-.btn-blue{background:var(--blue)}
-.btn-red{background:var(--red);font-size:12px;padding:7px 12px;box-shadow:0 2px 8px rgba(220,38,38,0.3)}
-.btn-purple{background:var(--purple)}
-.btn-green{background:var(--green)}
-
-.section-title{
-  font-size:20px;
-  margin:28px 0 14px 0;
-  color:var(--text);
-  font-weight:700;
-  letter-spacing:-0.5px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.company{
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-  margin:30px 0;
-  line-height:1.7;
-}
-
-.qty-input{
-  width:70px;
-  padding:6px 8px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  text-align:center;
-  margin:0 6px;
-  font-weight:600;
-  font-size:14px;
-}
-input[type="text"],input[type="email"],input[type="password"]{
-  width:100%;
-  padding:10px 12px;
-  margin:6px 0;
-  border:1px solid var(--border);
-  border-radius:10px;
-  font-size:14px;
-  transition:border 0.2s;
-  background:#fff;
-}
-input:focus{
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(37,99,235,0.1);
-}
-
-.cart{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:var(--card);
-  padding:16px;
-  border-top:3px solid var(--accent);
-  box-shadow:0 -4px 20px rgba(0,0,0,0.12);
-  max-height:320px;
-  overflow-y:auto;
-  backdrop-filter:blur(10px);
-}
-.cart-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-  font-weight:600;
-}
-.cart-total{
-  font-size:22px;
-  font-weight:700;
-  color:var(--green);
-  margin:12px 0;
-  letter-spacing:-0.5px;
-}
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 12px;
-  border-bottom:1px solid var(--border);
-  font-size:13px;
-  background:#f8fafc;
-  border-radius:8px;
-  margin-bottom:6px;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  z-index:1000;
-  left:0;
-  top:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(4px);
-  animation:fadeIn 0.2s;
-}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-content{
-  background:var(--card);
-  margin:5% auto;
-  padding:24px;
-  border-radius:16px;
-  width:90%;
-  max-width:500px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.3);
-  animation:slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
-}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.close{
-  float:right;
-  font-size:28px;
-  cursor:pointer;
-  color:var(--muted);
-  line-height:1;
-}
-.close:hover{color:var(--text)}
-
-.bank-details{
-  background:linear-gradient(135deg,#eff6ff,#dbeafe);
-  border:2px solid var(--accent);
-  padding:16px;
-  border-radius:12px;
-  margin:16px 0;
-  font-size:13px;
-}
-.qr-box{
-  text-align:center;
-  margin:16px 0;
-  padding:18px;
-  background:#fff;
-  border:2px dashed var(--accent);
-  border-radius:12px;
-}
-.qr-box img{
-  width:180px;
-  height:180px;
-  margin:10px auto;
-  display:block;
-  border-radius:8px;
-}
-
-.admin-panel{
-  background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
-  padding:16px;
-  border-radius:12px;
-  margin:18px 0;
-  border:2px dashed var(--accent);
-}
-.admin-panel h4{
-  margin:5px 0 12px;
-  font-size:14px;
-  font-weight:700;
-  color:var(--accent-dark);
-}
-
-.toggle-btn{
-  background:#64748b;
-  color:white;
-  border:none;
-  padding:5px 10px;
-  border-radius:6px;
-  font-size:11px;
-  cursor:pointer;
-  margin-left:5px;
-  display:none;
-  font-weight:600;
-  transition:all 0.2s;
-}
-.toggle-btn:hover{background:#475569}
-
-.copy-box{display:flex;gap:6px;margin-top:10px}
-.copy-box input{
-  flex:1;
-  padding:8px 10px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  font-size:12px;
-}
-
-.sync-status{
-  position:fixed;
-  top:80px;
-  right:12px;
-  z-index:999;
-  background:var(--green);
-  color:white;
-  padding:7px 12px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:600;
-  box-shadow:0 4px 12px rgba(22,163,74,0.3);
-  letter-spacing:0.3px;
-}
-
-.admin-only{display:none}
-
-.password-wrapper{position:relative}
-.password-wrapper button{
-  position:absolute;
-  right:8px;
-  top:10px;
-  background:none;
-  border:none;
-  cursor:pointer;
-  font-size:16px;
-  opacity:0.6;
-}
-.password-wrapper button:hover{opacity:1}
-
-.checkbox-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin:8px 0;
-  font-size:13px;
-  color:var(--muted);
-}
-
-@media(max-width:600px){
-.grid{grid-template-columns:1fr}
-.header h1{font-size:21px}
-.card img{height:180px}
-} /* <-- add this */
+:root{--bg:#f8fafc;--card:#ffffff;--accent:#2563eb;--accent-dark:#1e40af;--green:#16a34a;--red:#dc2626;--blue:#1e40af;--purple:#7c3aed;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--shadow:0 1px 3px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.05);--shadow-lg:0 10px 40px rgba(37,99,235,0.15);--gradient:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);}*{box-sizing:border-box}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;-webkit-font-smoothing:antialiased;}.header{background:var(--gradient);color:white;padding:25px 15px;text-align:center;position:relative;box-shadow:var(--shadow-lg);}.logo{width:90px;height:90px;border-radius:50%;background:white;padding:6px;margin:0 auto 12px;border:3px solid rgba(255,255,255,0.3);object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.2);}.header h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-0.5px;}.header p{margin:8px 0 0;font-size:13px;opacity:0.9;font-weight:400;}.container{padding:20px 15px 240px 15px;max-width:1000px;margin:0 auto}.card{background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:var(--shadow);position:relative;border:1px solid var(--border);}.card img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:12px;border:1px solid var(--border);}.card h3{margin:8px 0;color:var(--accent);font-size:17px;font-weight:700;}.price{font-size:20px;font-weight:700;color:var(--green);}.old-price{text-decoration:line-through;color:var(--muted);font-size:13px;margin-left:6px;}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}.btn{background:var(--gradient);color:white;border:none;padding:12px 18px;border-radius:10px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;}.btn-green{background:var(--green)}.btn-red{background:var(--red)}.admin-panel{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:16px;border-radius:12px;margin:18px 0;border:2px dashed var(--accent);}.toggle-btn{background:#64748b;color:white;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-left:5px;display:inline-block;font-weight:600;}input[type="text"],input[type="email"],input[type="password"]{width:100%;padding:10px 12px;margin:6px 0;border:1px solid var(--border);border-radius:10px;font-size:14px;}textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;}.sync-status{position:fixed;top:80px;right:12px;z-index:999;background:var(--green);color:white;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:600;}
 </style>
 </head>
 <body>
 
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0"> 
-  
 <div class="sync-status" id="syncStatus">🟡 Connecting...</div>
-
-<div class="special-banner" id="specialBanner">
-🎉 SPECIAL: Free Delivery on all bulk orders this week!
-</div>
 
 <div class="header">
  <img src="https://files.catbox.moe/f1dh44.jpg" alt="Aquapure Logo" class="logo">
-  <h1>AQUAPURE STILL WATER</h1>
-  <p>Pure and Fresh Drinking Water | Pure by nature. Perfect for you.</p>
-  <span class="badge">Free Delivery</span>
-  <span class="badge">Open Daily</span>
-  <span class="badge blue">EFT + QR Pay</span>
+  <h1>AQUAPURE ADMIN</h1>
+  <p>Manage Products + Stock</p>
 </div>
 
 <div class="container">
 
-<div class="admin-panel" id="adminPanel" style="display:none">
-  <h4>⚙️ Admin Controls - Live Sync to All Clients</h4>
+<div class="admin-panel" id="adminPanel">
+  <h4>⚙️ Admin Controls - Firebase Sync</h4>
 
-  <!-- LOGIN FORM -->
   <div id="loginForm">
     <input type="email" id="adminEmail" placeholder="Admin Email">
-    <div class="password-wrapper">
-      <input type="password" id="adminPassword" placeholder="Password">
-      <button type="button" onclick="togglePassword()">👁️</button>
-    </div>
-    <div class="checkbox-row">
-      <input type="checkbox" id="rememberMe">
-      <label for="rememberMe">Remember me</label>
-    </div>
+    <input type="password" id="adminPassword" placeholder="Password">
     <button class="btn btn-blue" onclick="adminLogin()">🔐 Login</button>
   </div>
 
-  <!-- ADMIN CONTROLS - hidden until login -->
-<div id="adminControls" style="display:none;margin-top:10px">
-  <p style="font-size:11px;color:var(--green);margin:5px 0">✅ Logged in as admin</p>
-  <button class="btn-red" onclick="adminLogout()">Logout</button>
-  <button class="btn-secondary" onclick="toggleSpecial()">Toggle Special Banner</button>
-  <button class="btn-green" onclick="copyClientLink()">📤 Send Client Link</button>
+  <div id="adminControls" style="display:none;margin-top:10px">
+    <p style="font-size:11px;color:var(--green);margin:5px 0">✅ Logged in</p>
+    <button class="btn-red" onclick="adminLogout()">Logout</button>
+    <button class="btn-secondary" onclick="toggleSpecial()">Toggle Special Banner</button>
 
-  <div class="copy-box" id="copyBox" style="display:none">
-    <input type="text" id="clientLink" readonly>
-    <button class="btn-whatsapp" onclick="shareWhatsApp()">Share</button>
-  </div>
-
-  <!-- PRODUCT EDITOR -->
-  <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
-    <h4 style="margin:0 0 10px; color:var(--purple);">✏️ Edit Products</h4>
-
-    <div id="productEditor"></div>
-
-    <button class="btn btn-green" onclick="saveProducts()">💾 Save All Changes</button>
-    <small style="display:block;margin-top:8px;color:var(--muted)">Changes sync instantly to all clients</small>
-  </div>
-
-  <!-- INVOICE GENERATOR - Admin Only -->
-  <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
-    <h4 style="margin:0 0 10px; color:var(--purple);">🧾 Invoice Generator</h4>
-    <input type="text" id="clientName" placeholder="Client/Shop Name">
-    <input type="text" id="clientPhone" placeholder="Client Phone">
-    <input type="email" id="clientEmail" placeholder="Client Email">
-    <input type="text" id="clientAddress" placeholder="Delivery Address - Shushumela Ext 2">
-    <button class="btn btn-purple" onclick="generateInvoicePDF()">📄 Generate Invoice PDF</button>
-    <button class="btn btn-whatsapp" onclick="sendInvoiceWhatsApp()">📱 Send Invoice via WhatsApp</button>
-    <button class="btn btn-blue" onclick="sendInvoiceEmail()">✉️ Send Invoice via Email</button>
-  </div>
-
-  <small style="display:block;margin-top:10px;color:var(--muted)">Stock syncs instantly to all phones</small>
-</div>
-
-<div class="section-title">💧 Bottled Water Packs</div>
-<div class="grid">
-<div class="card" id="water500" data-id="water500">
-  <button class="toggle-btn admin-only" onclick="toggleStock('water500')">OOS</button>
-  <img src="https://files.catbox.moe/84yxvh.jpg" alt="Aquapure 500ml">
-  <h3>Aquapure 500ml x24 Case</h3>
-  <p>Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply</p>
-  <div><span class="price">R120/case</span> <span class="old-price">R144</span></div>
-  <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq500" value="0" min="0"></div>
-  <button class="btn" id="btn500" onclick="addToCart('Aquapure 500ml x24 Case', 120, 'aq500')">Add to Order</button> 
-</div>
-
-<div class="card" id="water5L" data-id="water5L">
-  <button class="toggle-btn admin-only" onclick="toggleStock('water5L')">OOS</button>
-  <img src="https://files.catbox.moe/hdmlkp.jpg" alt="Aquapure 5L">
-  <h3>Aquapure 5L x4 Case</h3>
-  <p>High-quality purified water<br>For homes & businesses<br>Free delivery included</p>
-  <div><span class="price">R160/case</span> <span class="old-price">R200</span></div>
-  <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq5l" value="0" min="0"></div>
-  <button class="btn" id="btn5L" onclick="addToCart('Aquapure 5L x4 Case', 160, 'aq5l')">Add to Order</button> 
-</div>
-
-<div class="card" id="water20L" data-id="water20L">
-  <button class="toggle-btn admin-only" onclick="toggleStock('water20L')">OOS</button>
-  <img src="https://files.catbox.moe/zjszp8.jpg" alt="Aquapure 20L">
-  <h3>Aquapure 20L Bottle</h3>
-  <p>Office cooler refill<br>Same day service<br>Container exchange available</p>
-  <div><span class="price">R35/bottle</span></div>
-  <div style="margin-top:8px">Bottles: <input type="number" class="qty-input" id="aq20l" value="0" min="0"></div>
-  <button class="btn" id="btn20L" onclick="addToCart('Aquapure 20L Bottle', 35, 'aq20l')">Add to Order</button>
-</div>
-</div>
-
-<div class="section-title">🔄 Our Services</div>
-<div class="grid">
-<div class="card" id="serviceRefill" data-id="serviceRefill">
-  <button class="toggle-btn admin-only" onclick="toggleStock('serviceRefill')">OOS</button>
-  <img src="https://files.catbox.moe/6037ft.jpg" alt="Water Refill">
-  <h3>Purified Water Refill</h3>
-  <p>Bring your own container<br>High-quality purified water<br>For everyday needs</p>
-  <div><span class="price">R25/20L</span></div>
-  <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="refill" value="0" min="0"></div>
-  <button class="btn" id="btnRefill" onclick="addToCart('20L Water Refill', 25, 'refill')">Add to Order</button>
-</div>
-
-<div class="card" id="serviceCustom" data-id="serviceCustom">
-  <button class="toggle-btn admin-only" onclick="toggleStock('serviceCustom')">OOS</button>
-  <img src="https://files.catbox.moe/iakdw9.jpg" alt="Custom Water">
-  <h3>Custom Bottled Water</h3>
-  <p>Events, Weddings, Parties<br>Funerals and more<br>Custom labels available</p>
-  <div><span class="price">Quote on request</span></div>
-  <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="custom" value="0" min="0"></div>
-  <button class="btn" id="btnCustom" onclick="addToCart('Custom Bottled Water', 0, 'custom')">Request Quote</button>
-</div>
-</div>
-
-<div class="company">
-  <b>AQUAPURE STILL WATER</b><br>
-  <b>Contact:</b> 072 957 4064 / 076 935 9392<br>
-  <b>Email:</b> givenwesties09@icloud.com<br>
-  <b>Address:</b> Shushumela Ext 2, Next to Batubatse Primary School<br>
-  <b>Hours:</b> 9am - 19:00pm | Open Daily<br>
-  <b>Slogan:</b> HYDRATE. REFRESH. LIVE PURE.
-</div>
-</div>
-
-<div class="cart" id="cartBox" style="display:none">
-  <div class="cart-header">
-    <div><b>Your Order:</b> <span id="cartItems">0 items</span></div>
-    <button class="btn-red" onclick="clearCart()">🗑️ Cancel Order</button>
-  </div>
-  <div id="cartList"></div>
-  <div class="cart-total">Total: R<span id="cartTotal">0</span></div>
-  <button class="btn btn-whatsapp" onclick="sendWhatsAppOrder()">📱 Send Order via WhatsApp</button>
-  <button class="btn btn-blue" onclick="openPaymentModal()">💳 Pay with QR/EFT</button>
-</div>
-
-<div id="paymentModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closePaymentModal()">&times;</span>
-    <h3>💳 Pay Aquapure with QR Code</h3>
-    <div class="qr-box">
-      <p><b>Scan to Pay Aquapure Still Water</b></p>
-      <img id="qrCode" src="" alt="QR Code">
-      <p><b>Amount: R<span id="qrAmount">0</span></b></p>
+    <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
+      <h4 style="margin:0 0 10px; color:var(--purple);">✏️ Edit Products</h4>
+      <div id="productEditor"></div>
+      <button class="btn btn-green" onclick="saveProducts()">💾 Save All Changes</button>
+      <small style="display:block;margin-top:8px;color:var(--muted)">Saves to Firebase instantly</small>
     </div>
-    <div class="bank-details">
-      <p><b>Bank:</b> Standard Bank</p>
-      <p><b>Account Name:</b> AQUAPURE STILL WATER</p>
-      <p><b>Account Number:</b> 10 26 459 443 4</p>
-      <p><b>Branch Code:</b> 006145</p>
-    </div>
-    <button class="btn btn-whatsapp" onclick="sendPOPWhatsApp()">📱 Send POP via WhatsApp</button>
   </div>
+</div>
+
+<div class="section-title">💧 Products</div>
+<div class="grid" id="productGrid">
+<!-- Cards render here via JS -->
+</div>
+
 </div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwZlhYw5jJ1GtzwhmWnk2JC07MpUp1Xpk",
@@ -614,483 +64,118 @@ const firebaseConfig = {
   projectId: "aquapure-still-water",
   storageBucket: "aquapure-still-water.firebasestorage.app",
   messagingSenderId: "42102797679",
-  appId: "1:42102797679:web:86a26f7502cd43807ce49a",
-  measurementId: "G-BVT23ZWTPD"
+  appId: "1:42102797679:web:86a26f7502cd43807ce49a"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-let cart = [];
-let isClientMode = window.location.search.includes('client=true');
+const productsRef = ref(db, 'aquapure/products');
+const specialRef = ref(db, 'aquapure/special');
+const stockRef = ref(db, 'aquapure/stock');
 
-// SHOW/HIDE PASSWORD
-window.togglePassword = () => {
-  let pwd = document.getElementById('adminPassword');
-  pwd.type = pwd.type === 'password'? 'text' : 'password';
-}
-
-// ADMIN AUTH - with Remember Me
+// ADMIN AUTH
 window.adminLogin = () => {
   let email = document.getElementById('adminEmail').value;
   let password = document.getElementById('adminPassword').value;
-  let remember = document.getElementById('rememberMe').checked;
-
-  let persistence = remember? browserLocalPersistence : browserSessionPersistence;
-
-  setPersistence(auth, persistence)
-.then(() => signInWithEmailAndPassword(auth, email, password))
-.then(() => {
+  signInWithEmailAndPassword(auth, email, password)
+ .then(() => {
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('adminControls').style.display = 'block';
   })
-.catch(err => alert('Login failed: ' + err.message));
+ .catch(err => alert('Login failed: ' + err.message));
 }
 
 window.adminLogout = () => {
   signOut(auth);
   document.getElementById('loginForm').style.display = 'block';
   document.getElementById('adminControls').style.display = 'none';
-  document.getElementById('adminEmail').value = '';
-  document.getElementById('adminPassword').value = '';
-  document.getElementById('rememberMe').checked = false;
 }
 
 onAuthStateChanged(auth, user => {
-  if(!isClientMode) {
-    document.getElementById('adminPanel').style.display = 'block';
-    if(user) {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('adminControls').style.display = 'block';
-      document.querySelectorAll('.toggle-btn').forEach(btn => btn.style.display = 'inline-block');
-    } else {
-      document.getElementById('loginForm').style.display = 'block';
-      document.getElementById('adminControls').style.display = 'none';
-      document.querySelectorAll('.toggle-btn').forEach(btn => btn.style.display = 'none');
-    }
+  if(user) {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('adminControls').style.display = 'block';
   } else {
-    document.getElementById('adminPanel').style.display = 'none';
-    document.querySelectorAll('.toggle-btn').forEach(btn => btn.style.display = 'none');
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('adminControls').style.display = 'none';
   }
 });
 
-// LIVE SYNC
-const specialRef = ref(db, 'aquapure/special');
-const stockRef = ref(db, 'aquapure/stock');
-const productsRef = ref(db, 'aquapure/products');
-  
-onValue(specialRef, (snapshot) => {
-  let isActive = snapshot.val();
-  document.getElementById('specialBanner').classList.toggle('show', isActive);
-  document.getElementById('syncStatus').innerText = '🟢 Live Sync';
-});
-
-onValue(stockRef, (snapshot) => {
-  let stock = snapshot.val() || {};
-  document.querySelectorAll('.card[data-id]').forEach(card => {
-    let id = card.dataset.id;
-    let isOOS = stock[id];
-    if(isOOS) {
-      card.classList.add('oos');
-      let btn = card.querySelector('.btn');
-      if(btn) btn.disabled = true;
-    } else {
-      card.classList.remove('oos');
-      let btn = card.querySelector('.btn');
-      if(btn) btn.disabled = false;
-    }
-  });
-  document.getElementById('syncStatus').innerText = '🟢 Synced ' + new Date().toLocaleTimeString();
-});
-
-window.toggleSpecial = function() {
-  let banner = document.getElementById('specialBanner');
-  let newState =!banner.classList.contains('show');
-  set(specialRef, newState);
-}
-
-window.toggleStock = function(cardId) {
-  let isOOS = document.getElementById(cardId).classList.contains('oos');
-  set(ref(db, 'aquapure/stock/' + cardId),!isOOS);
-}
-
-window.copyClientLink = function() {
-  let baseUrl = window.location.href.split('?')[0];
-  let clientUrl = baseUrl + '?client=true';
-  document.getElementById('clientLink').value = clientUrl;
-  document.getElementById('copyBox').style.display = 'flex';
-  document.getElementById('clientLink').select();
-  document.execCommand('copy');
-  alert('Client link copied!');
-}
-
-window.shareWhatsApp = function() {
-  let clientUrl = document.getElementById('clientLink').value;
-  window.open(`https://wa.me/?text=${encodeURIComponent('Order Aquapure Still Water: ' + clientUrl)}`, '_blank');
-}
-
-// CART
-window.addToCart = function(name, price, qtyId) {
-  let qty = parseInt(document.getElementById(qtyId).value);
-  if(price === 0) {
-    window.open(`https://wa.me/27729574064?text=${encodeURIComponent('Hi Aquapure, quote for: ' + name)}`, '_blank');
-    return;
-  }
-  if(qty <= 0) { alert('Enter quantity first'); return; }
-  let existing = cart.find(item => item.name === name);
-  if(existing) {
-    existing.qty += qty;
-    existing.subtotal = existing.qty * price;
-  } else {
-    cart.push({name, price, qty, subtotal: price * qty});
-  }
-  updateCart();
-  document.getElementById(qtyId).value = 0;
-}
-
-function updateCart() {
-  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  let itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
-  document.getElementById('cartItems').innerText = itemCount + ' items';
-  document.getElementById('cartTotal').innerText = total.toLocaleString();
-  document.getElementById('qrAmount').innerText = total.toLocaleString();
-  document.getElementById('cartBox').style.display = cart.length > 0? 'block' : 'none';
-  document.getElementById('qrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Beneficiary:AQUAPURE%20STILL%20WATER%0AAccount:10264594434%0ABranch:006145%0AAmount:${total}`;
-  let listHTML = cart.map((item, index) => `
-    <div class="cart-item">
-      <div style="flex:1"><b>${item.name}</b><br><small>${item.qty} x R${item.price.toLocaleString()} = R${item.subtotal.toLocaleString()}</small></div>
-      <button class="btn-red" onclick="removeItem(${index})">Remove</button>
-    </div>`).join('');
-  document.getElementById('cartList').innerHTML = listHTML;
-}
-
-window.removeItem = function(index) { cart.splice(index, 1); updateCart(); }
-window.clearCart = function() { if(confirm('Cancel entire order?')) { cart = []; updateCart(); } }
-window.sendWhatsAppOrder = function() {
-  if(cart.length === 0) return;
-  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  let orderText = 'Hello Aquapure, new order:\n\n' + cart.map(i=>`• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}\n`).join('') + `TOTAL: R${total.toLocaleString()}\n\nName: \nAddress: Shushumela Ext 2\nPhone: `;
-  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(orderText)}`, '_blank');
-}
-window.openPaymentModal = function() {
-  if(cart.length === 0) { alert('Add items to cart first'); return; }
-  document.getElementById('paymentModal').style.display = 'block';
-}
-window.closePaymentModal = function() { document.getElementById('paymentModal').style.display = 'none'; }
-window.sendPOPWhatsApp = function() {
-  let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  window.open(`https://wa.me/27729574064?text=${encodeURIComponent('POP attached for Aquapure order. Amount: R' + total.toLocaleString())}`, '_blank');
-  closePaymentModal();
-}
-
-// INVOICE GENERATOR
-function buildInvoiceHTML(clientData, items, total, invoiceNum) {
-  const date = new Date().toLocaleDateString('en-ZA');
-  const itemsHTML = items.map(i => `
-    <tr>
-      <td>${i.name}</td>
-      <td style="text-align:center">${i.qty}</td>
-      <td style="text-align:right">R${i.price.toLocaleString()}</td>
-      <td style="text-align:right">R${i.subtotal.toLocaleString()}</td>
-    </tr>
-  `).join('');
-
-  return `
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Invoice ${invoiceNum}</title>
-    <style>
-      body{font-family:Arial,sans-serif;color:#0f172a;padding:40px}
-     .header{display:flex;justify-content:space-between;margin-bottom:30px}
-     .company h2{margin:0;color:#2563eb}
-     .invoice-info{text-align:right}
-      table{width:100%;border-collapse:collapse;margin:20px 0}
-      th{background:#f8fafc;padding:12px;border-bottom:2px solid #e2e8f0;text-align:left}
-      td{padding:12px;border-bottom:1px solid #e2e8f0}
-     .total-row{font-weight:700;font-size:18px}
-     .footer{margin-top:40px;font-size:12px;color:#64748b}
-    </style>
-  </head>
-  <body>
-    <div class="header">
-      <div class="company">
-        <h2>AQUAPURE STILL WATER</h2>
-        <p>Shushumela Ext 2, Next to Batubatse Primary School<br>
-        Tel: 072 957 4064 / 076 935 9392<br>
-        Email: givenwesties09@icloud.com</p>
-      </div>
-      <div class="invoice-info">
-        <h3>INVOICE</h3>
-        <p><strong>No:</strong> ${invoiceNum}<br>
-        <strong>Date:</strong> ${date}</p>
-      </div>
-    </div>
-
-    <div>
-      <p><strong>Bill To:</strong><br>
-      ${clientData.name}<br>
-      ${clientData.phone}<br>
-      ${clientData.email}<br>
-      ${clientData.address}</p>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th style="text-align:center">Qty</th>
-          <th style="text-align:right">Unit Price</th>
-          <th style="text-align:right">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${itemsHTML}
-        <tr class="total-row">
-          <td colspan="3" style="text-align:right">TOTAL:</td>
-          <td style="text-align:right">R${total.toLocaleString()}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="footer">
-      <p><strong>Bank Details:</strong><br>
-      Standard Bank<br>
-      Account Name: AQUAPURE STILL WATER<br>
-      Account No: 10 26 459 443 4<br>
-            Branch Code: 006145</p>
-      <p>Thank you for choosing Aquapure Still Water!</p>
-    </div>
-  </body>
-  </html>
-  `;
-}
-
-function generateInvoiceData() {
-  if(cart.length === 0) { 
-    alert('Add items to cart first'); 
-    return null; 
-  }
-  
-  const clientName = document.getElementById('clientName').value || 'Customer';
-  const clientPhone = document.getElementById('clientPhone').value || '';
-  const clientEmail = document.getElementById('clientEmail').value || '';
-  const clientAddress = document.getElementById('clientAddress').value || 'Shushumela Ext 2';
-  
-  const total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  const invoiceNum = 'INV-' + Date.now().toString().slice(-6);
-  
-  return {
-    client: { name: clientName, phone: clientPhone, email: clientEmail, address: clientAddress },
-    items: cart,
-    total: total,
-    invoiceNum: invoiceNum
-  };
-}
-
-window.generateInvoicePDF = function() {
-  const data = generateInvoiceData();
-  if(!data) return;
-  
-  const win = window.open('', '_blank');
-  win.document.write(buildInvoiceHTML(data.client, data.items, data.total, data.invoiceNum));
-  win.document.close();
-  
-  setTimeout(() => {
-    win.print();
-  }, 500);
-}
-
-window.sendInvoiceWhatsApp = function() {
-  const data = generateInvoiceData();
-  if(!data) return;
-  
-  const msg = `Hello ${data.client.name}, your Aquapure invoice is ready.
-  
-Invoice: ${data.invoiceNum}
-Amount: R${data.total.toLocaleString()}
-Email: ${data.client.email || 'N/A'}
-
-Bank Details:
-Standard Bank
-Account: 10 26 459 443 4
-Branch: 006145
-
-Thank you for choosing Aquapure Still Water!`;
-
-  window.open(`https://wa.me/27729574064?text=${encodeURIComponent(msg)}`, '_blank');
-}
-
-window.sendInvoiceEmail = function() {
-  const data = generateInvoiceData();
-  if(!data) return;
-  
-  const email = data.client.email || 'givenwesties09@icloud.com';
-  const subject = encodeURIComponent(`Aquapure Invoice ${data.invoiceNum}`);
-  const body = encodeURIComponent(`Hello ${data.client.name},
-
-Please find your invoice attached/included below.
-
-Invoice Number: ${data.invoiceNum}
-Total Amount: R${data.total.toLocaleString()}
-
-Items:
-${data.items.map(i => `- ${i.name} x${i.qty} = R${i.subtotal.toLocaleString()}`).join('\n')}
-
-Bank Details:
-Standard Bank
-Account Name: AQUAPURE STILL WATER
-Account No: 10 26 459 443 4
-Branch Code: 006145
-
-Thank you for choosing Aquapure Still Water!
-Contact: 072 957 4064 / 076 935 9392
-Email: givenwesties09@icloud.com`);
-
-  window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
-}  
-
-// Default products - used if Firebase is empty
+// DEFAULT PRODUCTS
 const defaultProducts = {
-  water500: {name:"Aquapure 500ml x24 Case",price:120,oldPrice:144,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply"},
-  water5L: {name:"Aquapure 5L x4 Case",price:160,oldPrice:200,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"High-quality purified water<br>For homes & businesses<br>Free delivery included"},
-  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service<br>Container exchange available"},
-  serviceRefill: {name:"Purified Water Refill",price:25,oldPrice:0,img:"https://files.catbox.moe/6037ft.jpg",desc:"Bring your own container<br>High-quality purified water<br>For everyday needs"},
-  serviceCustom: {name:"Custom Bottled Water",price:0,oldPrice:0,img:"https://files.catbox.moe/iakdw9.jpg",desc:"Events, Weddings, Parties<br>Funerals and more<br>Custom labels available"}
+  water500: {name:"Aquapure 500ml x24 Case",price:120,oldPrice:144,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Purified still water<br>Perfect for homes, offices & events"},
+  water5L: {name:"Aquapure 5L x4 Case",price:160,oldPrice:200,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"High-quality purified water<br>For homes & businesses"},
+  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service"}
 };
 
-// Load products from Firebase
-onValue(productsRef, (snapshot) => {
-  let products = snapshot.val();
-
-  // FORCE USE DEFAULTS IF FIREBASE EMPTY - NO AUTO-SEED
-  if(!products || Object.keys(products).length === 0) {
-    products = defaultProducts;
-  }
-
-  updateProductPrices(products);
-  if(!isClientMode) {
-    buildProductEditor(products);
-  }
-  document.getElementById('syncStatus').innerText = '🟢 Synced ' + new Date().toLocaleTimeString();
-});
-
-// Rest of your functions stay the same...
-window.saveProducts = function() {
-  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
-  const updates = {};
-  productIds.forEach(id => {
-    const name = document.getElementById(`name_${id}`)?.value.trim();
-    const img = document.getElementById(`img_${id}`)?.value.trim();
-    const desc = document.getElementById(`desc_${id}`)?.value.replace(/\n/g, '<br>').trim();
-    const price = parseInt(document.getElementById(`price_${id}`)?.value) || 0;
-    const oldPrice = parseInt(document.getElementById(`oldPrice_${id}`)?.value) || 0;
-    if(name) updates[id] = {name, img, desc, price, oldPrice};
-  });
-  set(productsRef, updates)
-.then(() => alert('✅ Saved to Firebase! Refresh client link'))
-.catch(err => alert('Error: ' + err.message));
-}  
-
-function updateProductPrices(products) {
+// RENDER PRODUCTS
+function renderProducts(products) {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = '';
   Object.keys(products).forEach(id => {
-    const card = document.getElementById(id);
-    if(!card) return;
-
-    const data = products[id];
-    if(!data) return;
-
-    try {
-      const img = card.querySelector('img');
-      if(img && data.img) img.src = data.img;
-
-      const h3 = card.querySelector('h3');
-      if(h3 && data.name) h3.innerText = data.name;
-
-      const p = card.querySelector('p');
-      if(p && data.desc) p.innerHTML = data.desc;
-
-      const priceEl = card.querySelector('.price');
-      if(priceEl && data.price!== undefined) {
-        let suffix = id==='water20L'? '/bottle' : id==='serviceRefill'? '/20L' : '/case';
-        priceEl.innerText = data.price === 0? 'Quote on request' : `R${data.price}${suffix}`;
-      }
-
-      const oldPriceEl = card.querySelector('.old-price');
-      if(oldPriceEl) {
-        if(data.oldPrice && data.oldPrice > 0) {
-          oldPriceEl.innerText = `R${data.oldPrice}`;
-          oldPriceEl.style.display = 'inline';
-        } else {
-          oldPriceEl.style.display = 'none';
-        }
-      }
-
-      const btn = card.querySelector('.btn');
-      const qtyInput = card.querySelector('.qty-input');
-      if(btn && qtyInput) {
-        btn.onclick = () => addToCart(data.name, data.price, qtyInput.id);
-      }
-    } catch(e) {
-      console.log('Update price error for', id, e);
-    }
+    const p = products[id];
+    grid.innerHTML += `
+      <div class="card" id="${id}" data-id="${id}">
+        <button class="toggle-btn" onclick="toggleStock('${id}')">OOS</button>
+        <img src="${p.img}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div><span class="price">R${p.price}${id==='water20L'?'/bottle':'/case'}</span> ${p.oldPrice>0?`<span class="old-price">R${p.oldPrice}</span>`:''}</div>
+      </div>
+    `;
   });
 }
 
-function buildProductEditor(products) {
-  const editor = document.getElementById('productEditor');
-  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
+// LOAD FROM FIREBASE
+onValue(productsRef, (snapshot) => {
+  let products = snapshot.val();
+  if(!products) products = defaultProducts;
+  renderProducts(products);
+  buildEditor(products);
+  document.getElementById('syncStatus').innerText = '🟢 Connected';
+});
 
+// BUILD EDITOR
+function buildEditor(products) {
+  const editor = document.getElementById('productEditor');
   let html = '';
-  productIds.forEach(id => {
-    const data = products[id] || defaultProducts[id];
+  Object.keys(products).forEach(id => {
+    const p = products[id];
     html += `
       <div style="background:#fff;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
-        <b style="font-size:12px">${id}</b><br>
-        <input type="text" id="name_${id}" value="${data.name}" placeholder="Product Name" style="margin:4px 0">
-        <input type="text" id="img_${id}" value="${data.img || ''}" placeholder="Image URL" style="margin:4px 0">
-        <textarea id="desc_${id}" placeholder="Description" style="margin:4px 0;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;">${(data.desc || '').replace(/<br>/g, '\n')}</textarea>
-        <input type="number" id="price_${id}" value="${data.price}" placeholder="Price R" style="margin:4px 0">
-        <input type="number" id="oldPrice_${id}" value="${data.oldPrice || ''}" placeholder="Old Price R - optional" style="margin:4px 0">
+        <b>${id}</b><br>
+        <input type="text" id="name_${id}" value="${p.name}" placeholder="Name">
+        <input type="text" id="img_${id}" value="${p.img}" placeholder="Image URL">
+        <textarea id="desc_${id}" placeholder="Description">${(p.desc||'').replace(/<br>/g,'\n')}</textarea>
+        <input type="number" id="price_${id}" value="${p.price}" placeholder="Price">
+        <input type="number" id="oldPrice_${id}" value="${p.oldPrice||''}" placeholder="Old Price">
       </div>
     `;
   });
   editor.innerHTML = html;
 }
 
+// SAVE
 window.saveProducts = function() {
-  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
   const updates = {};
-  let hasError = false;
-
-  productIds.forEach(id => {
-    const name = document.getElementById(`name_${id}`)?.value.trim();
-    const img = document.getElementById(`img_${id}`)?.value.trim();
-    const desc = document.getElementById(`desc_${id}`)?.value.replace(/\n/g, '<br>').trim();
-    const price = parseInt(document.getElementById(`price_${id}`)?.value);
-    const oldPrice = parseInt(document.getElementById(`oldPrice_${id}`)?.value) || 0;
-
-    if(!name || price === undefined || price < 0) {
-      alert(`Name and valid Price required for ${id}`);
-      hasError = true;
-      return;
-    }
-
-    updates[id] = {name, img, desc, price, oldPrice};
+  Object.keys(defaultProducts).forEach(id => {
+    updates[id] = {
+      name: document.getElementById(`name_${id}`).value,
+      img: document.getElementById(`img_${id}`).value,
+      desc: document.getElementById(`desc_${id}`).value.replace(/\n/g,'<br>'),
+      price: parseInt(document.getElementById(`price_${id}`).value),
+      oldPrice: parseInt(document.getElementById(`oldPrice_${id}`).value)||0
+    };
   });
-
-  if(hasError) return;
-
   set(productsRef, updates)
- .then(() => alert('✅ Products updated! All clients see changes instantly'))
+ .then(() => alert('✅ Saved to Firebase!'))
  .catch(err => alert('Error: ' + err.message));
 }
 
-window.onclick = function(event) {
-  if(event.target.classList.contains('modal')) event.target.style.display = 'none';
-}
+window.toggleSpecial = () => set(specialRef,!document.getElementById('specialBanner')?.classList.contains('show'));
+window.toggleStock = (id) => set(ref(db, 'aquapure/stock/' + id),!document.getElementById(id).classList.contains('oos'));
 </script>
 </body>
 </html>
