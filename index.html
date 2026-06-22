@@ -954,62 +954,45 @@ Email: givenwesties09@icloud.com`);
 
 // Default products - used if Firebase is empty
 const defaultProducts = {
-  water500: {
-    name: "Aquapure 500ml x24 Case",
-    price: 120,
-    oldPrice: 144,
-    img: "https://files.catbox.moe/84yxvh.jpg",
-    desc: "Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply"
-  },
-  water5L: {
-    name: "Aquapure 5L x4 Case",
-    price: 160,
-    oldPrice: 200,
-    img: "https://files.catbox.moe/hdmlkp.jpg",
-    desc: "High-quality purified water<br>For homes & businesses<br>Free delivery included"
-  },
-  water20L: {
-    name: "Aquapure 20L Bottle",
-    price: 35,
-    oldPrice: 0,
-    img: "https://files.catbox.moe/zjszp8.jpg",
-    desc: "Office cooler refill<br>Same day service<br>Container exchange available"
-  },
-  serviceRefill: {
-    name: "Purified Water Refill",
-    price: 25,
-    oldPrice: 0,
-    img: "https://files.catbox.moe/6037ft.jpg",
-    desc: "Bring your own container<br>High-quality purified water<br>For everyday needs"
-  },
-  serviceCustom: {
-    name: "Custom Bottled Water",
-    price: 0,
-    oldPrice: 0,
-    img: "https://files.catbox.moe/iakdw9.jpg",
-    desc: "Events, Weddings, Parties<br>Funerals and more<br>Custom labels available"
-  }
+  water500: {name:"Aquapure 500ml x24 Case",price:120,oldPrice:144,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply"},
+  water5L: {name:"Aquapure 5L x4 Case",price:160,oldPrice:200,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"High-quality purified water<br>For homes & businesses<br>Free delivery included"},
+  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service<br>Container exchange available"},
+  serviceRefill: {name:"Purified Water Refill",price:25,oldPrice:0,img:"https://files.catbox.moe/6037ft.jpg",desc:"Bring your own container<br>High-quality purified water<br>For everyday needs"},
+  serviceCustom: {name:"Custom Bottled Water",price:0,oldPrice:0,img:"https://files.catbox.moe/iakdw9.jpg",desc:"Events, Weddings, Parties<br>Funerals and more<br>Custom labels available"}
 };
 
 // Load products from Firebase
 onValue(productsRef, (snapshot) => {
-  try {
-    let products = snapshot.val();
+  let products = snapshot.val();
 
-    if(!products || Object.keys(products).length === 0) {
-      products = defaultProducts;
-      set(productsRef, defaultProducts);
-    }
+  // FORCE USE DEFAULTS IF FIREBASE EMPTY - NO AUTO-SEED
+  if(!products || Object.keys(products).length === 0) {
+    products = defaultProducts;
+  }
 
-    updateProductPrices(products);
-    if(!isClientMode) {
-      buildProductEditor(products);
-    }
-  } catch(e) {
-    console.log('Firebase products error:', e);
+  updateProductPrices(products);
+  if(!isClientMode) {
+    buildProductEditor(products);
   }
   document.getElementById('syncStatus').innerText = '🟢 Synced ' + new Date().toLocaleTimeString();
 });
+
+// Rest of your functions stay the same...
+window.saveProducts = function() {
+  const productIds = ['water500', 'water5L', 'water20L', 'serviceRefill', 'serviceCustom'];
+  const updates = {};
+  productIds.forEach(id => {
+    const name = document.getElementById(`name_${id}`)?.value.trim();
+    const img = document.getElementById(`img_${id}`)?.value.trim();
+    const desc = document.getElementById(`desc_${id}`)?.value.replace(/\n/g, '<br>').trim();
+    const price = parseInt(document.getElementById(`price_${id}`)?.value) || 0;
+    const oldPrice = parseInt(document.getElementById(`oldPrice_${id}`)?.value) || 0;
+    if(name) updates[id] = {name, img, desc, price, oldPrice};
+  });
+  set(productsRef, updates)
+.then(() => alert('✅ Saved to Firebase! Refresh client link'))
+.catch(err => alert('Error: ' + err.message));
+}  
 
 function updateProductPrices(products) {
   Object.keys(products).forEach(id => {
