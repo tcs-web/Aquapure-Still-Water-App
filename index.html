@@ -74,14 +74,21 @@
   <div class="modal-content">
     <h3 style="margin-top:0;color:var(--accent)">🧾 Create Invoice</h3>
     <input type="text" id="invCustomer" placeholder="Customer Name">
-    <input type="tel" id="invPhone" placeholder="Customer Phone">
+    <input type="tel" id="invPhone" placeholder="Customer Phone - 072... or 27...">
     <textarea id="invAddress" placeholder="Delivery Address" rows="2"></textarea>
 
     <h4 style="margin:15px 0 8px;color:var(--purple)">Select Products:</h4>
     <div id="invoiceProducts"></div>
 
-    <button class="btn btn-blue" onclick="generateInvoice()">Generate & Print Invoice</button>
+    <button class="btn btn-blue" onclick="generateInvoice()">Generate Invoice</button>
     <button class="btn-secondary" onclick="closeInvoiceModal()">Cancel</button>
+
+    <div id="invoiceActions" style="display:none;margin-top:15px;border-top:2px solid var(--border);padding-top:15px">
+      <small style="color:var(--muted)">Edit WhatsApp number if needed:</small>
+      <input type="tel" id="whatsappNumber" placeholder="27... for WhatsApp">
+      <button class="btn btn-whatsapp" onclick="shareInvoiceWhatsApp()">📱 Send Invoice via WhatsApp</button>
+      <button class="btn btn-green" onclick="printInvoice()">🖨️ Print / Save PDF</button>
+    </div>
   </div>
 </div>
 
@@ -112,6 +119,7 @@ const stockRef = ref(db, 'aquapure/stock');
 
 let cart = [];
 let currentProducts = {};
+let lastInvoiceData = null; // Store invoice data for WhatsApp
 const isClientMode = window.location.search.includes('client=true');
 
 // HIDE ADMIN FOR CLIENT MODE
@@ -293,11 +301,13 @@ window.openInvoiceModal = function() {
     </div>`;
   });
   document.getElementById('invoiceProducts').innerHTML = html;
+  document.getElementById('invoiceActions').style.display = 'none';
   document.getElementById('invoiceModal').style.display = 'flex';
 }
 
 window.closeInvoiceModal = function() {
   document.getElementById('invoiceModal').style.display = 'none';
+  lastInvoiceData = null;
 }
 
 window.generateInvoice = function() {
@@ -324,8 +334,27 @@ window.generateInvoice = function() {
 
   if(items.length === 0) { alert('Select at least 1 product'); return; }
 
+  // Format phone for WhatsApp: 072... -> 2772...
+  let waPhone = phone.replace(/\s+/g,'').replace(/[^0-9]/g,'');
+  if(waPhone.startsWith('0')) waPhone = '27' + waPhone.substring(1);
+  if(!waPhone.startsWith('27')) waPhone = '27' + waPhone;
+
   let invNum = 'AP' + Date.now().toString().slice(-6);
   let date = new Date().toLocaleDateString('en-ZA');
+
+  // Store for WhatsApp share
+  lastInvoiceData = {customer, phone, address, items, total, invNum, date, waPhone};
+
+  // Show WhatsApp actions
+  document.getElementById('whatsappNumber').value = waPhone;
+  document.getElementById('invoiceActions').style.display = 'block';
+
+  alert('✅ Invoice ready! Edit WhatsApp number if needed, then click Send WhatsApp or Print PDF');
+}
+
+window.printInvoice = function() {
+  if(!lastInvoiceData) return;
+  let {customer, phone, address, items, total, invNum, date} = lastInvoiceData;
 
   let rows = items.map(i => `
     <tr>
@@ -379,9 +408,21 @@ window.generateInvoice = function() {
   printWindow.document.write(`<html><head><title>Invoice ${invNum}</title><style>@media print{body{margin:0}}${document.querySelector('style').innerText}</style></head><body>${invoiceHTML}</body></html>`);
   printWindow.document.close();
   printWindow.print();
+}
 
-  closeInvoiceModal();
-  alert('✅ Invoice generated! Print dialog opened.');
+window.shareInvoiceWhatsApp = function() {
+  if(!lastInvoiceData) return;
+
+  let waPhone = document.getElementById('whatsappNumber').value.replace(/\s+/g,'').replace(/[^0-9]/g,'');
+  if(!waPhone.startsWith('27')) waPhone = '27' + waPhone;
+
+  let {customer, items, total, invNum, date} = lastInvoiceData;
+
+  let itemText = items.map(i => `• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}`).join('\n\n');
+
+  let message = `Hello ${customer}, here is your Aquapure invoice:\n\n*Invoice #${invNum}*\nDate: ${date}\n\n${itemText}\n\n*TOTAL: R${total.toLocaleString()}*\n\nThank you for your business! 💧`;
+
+  window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(message)}`, '_blank');
 }
 </script>
 </body>
