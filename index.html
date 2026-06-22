@@ -208,7 +208,14 @@ function renderProducts(products, stock) {
 }
 
 onValue(productsRef, (snapshot) => {
-  currentProducts = snapshot.val() || defaultProducts;
+  currentProducts = snapshot.val();
+  
+  // If Firebase is empty, seed it with defaultProducts
+  if (!currentProducts) {
+    set(productsRef, defaultProducts);
+    currentProducts = defaultProducts;
+  }
+  
   onValue(stockRef, (stockSnap) => {
     let stock = stockSnap.val() || {};
     renderProducts(currentProducts, stock);
@@ -216,7 +223,6 @@ onValue(productsRef, (snapshot) => {
     document.getElementById('syncStatus').innerText = '🟢 Connected';
   });
 });
-
 function buildEditor(products) {
   const editor = document.getElementById('productEditor');
   let html = '';
