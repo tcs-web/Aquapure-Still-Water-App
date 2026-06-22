@@ -511,7 +511,7 @@ input:focus{
   <p>Purified still water<br>Perfect for homes, offices & events<br>Reliable daily supply</p>
   <div><span class="price">R120/case</span> <span class="old-price">R144</span></div>
   <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq500" value="0" min="0"></div>
-  <button class="btn" id="btn500">Add to Order</button>
+  <button class="btn" id="btn500" onclick="addToCart('Aquapure 500ml x24 Case', 120, 'aq500')">Add to Order</button> 
 </div>
 
 <div class="card" id="water5L" data-id="water5L">
@@ -521,7 +521,7 @@ input:focus{
   <p>High-quality purified water<br>For homes & businesses<br>Free delivery included</p>
   <div><span class="price">R160/case</span> <span class="old-price">R200</span></div>
   <div style="margin-top:8px">Cases: <input type="number" class="qty-input" id="aq5l" value="0" min="0"></div>
-  <button class="btn" id="btn5L">Add to Order</button>
+  <button class="btn" id="btn5L" onclick="addToCart('Aquapure 5L x4 Case', 160, 'aq5l')">Add to Order</button> 
 </div>
 
 <div class="card" id="water20L" data-id="water20L">
@@ -531,7 +531,7 @@ input:focus{
   <p>Office cooler refill<br>Same day service<br>Container exchange available</p>
   <div><span class="price">R35/bottle</span></div>
   <div style="margin-top:8px">Bottles: <input type="number" class="qty-input" id="aq20l" value="0" min="0"></div>
-  <button class="btn" id="btn20L">Add to Order</button>
+  <button class="btn" id="btn20L" onclick="addToCart('Aquapure 20L Bottle', 35, 'aq20l')">Add to Order</button>
 </div>
 </div>
 
@@ -544,7 +544,7 @@ input:focus{
   <p>Bring your own container<br>High-quality purified water<br>For everyday needs</p>
   <div><span class="price">R25/20L</span></div>
   <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="refill" value="0" min="0"></div>
-  <button class="btn" id="btnRefill">Add to Order</button>
+  <button class="btn" id="btnRefill" onclick="addToCart('20L Water Refill', 25, 'refill')">Add to Order</button>
 </div>
 
 <div class="card" id="serviceCustom" data-id="serviceCustom">
@@ -554,7 +554,7 @@ input:focus{
   <p>Events, Weddings, Parties<br>Funerals and more<br>Custom labels available</p>
   <div><span class="price">Quote on request</span></div>
   <div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="custom" value="0" min="0"></div>
-  <button class="btn" id="btnCustom">Request Quote</button>
+  <button class="btn" id="btnCustom" onclick="addToCart('Custom Bottled Water', 0, 'custom')">Request Quote</button>
 </div>
 </div>
 
