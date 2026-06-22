@@ -75,6 +75,7 @@
     <h3 style="margin-top:0;color:var(--accent)">🧾 Create Invoice</h3>
     <input type="text" id="invCustomer" placeholder="Customer Name">
     <input type="tel" id="invPhone" placeholder="Customer Phone - 072... or 27...">
+    <input type="email" id="invEmail" placeholder="Customer Email - for email invoice">
     <textarea id="invAddress" placeholder="Delivery Address" rows="2"></textarea>
 
     <h4 style="margin:15px 0 8px;color:var(--purple)">Select Products:</h4>
@@ -84,10 +85,22 @@
     <button class="btn-secondary" onclick="closeInvoiceModal()">Cancel</button>
 
     <div id="invoiceActions" style="display:none;margin-top:15px;border-top:2px solid var(--border);padding-top:15px">
-      <small style="color:var(--muted)">Edit WhatsApp number if needed:</small>
-      <input type="tel" id="whatsappNumber" placeholder="27... for WhatsApp">
-      <button class="btn btn-whatsapp" onclick="shareInvoiceWhatsApp()">📱 Send Invoice via WhatsApp</button>
-      <button class="btn btn-green" onclick="printInvoice()">🖨️ Print / Save PDF</button>
+      <small style="color:var(--muted)">Share invoice:</small>
+      
+      <div style="margin-top:8px">
+        <input type="tel" id="whatsappNumber" placeholder="27... for WhatsApp">
+        <button class="btn btn-whatsapp" onclick="shareInvoiceWhatsApp()">📱 Send via WhatsApp</button>
+      </div>
+
+      <div style="margin-top:8px">
+        <input type="email" id="emailAddress" placeholder="customer@email.com">
+        <button class="btn btn-blue" onclick="shareInvoiceEmail()">📧 Send via Email</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+        <button class="btn btn-green" onclick="downloadPDF()">⬇️ Download PDF</button>
+        <button class="btn-secondary" onclick="printInvoice()">🖨️ Print Only</button>
+      </div>
     </div>
   </div>
 </div>
