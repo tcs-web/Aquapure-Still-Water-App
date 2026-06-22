@@ -146,7 +146,7 @@ if(isClientMode) {
   document.getElementById('headerSub').innerText = 'Order via WhatsApp';
 }
 
-// ADMIN AUTH + PRODUCTS CODE - SAME AS BEFORE
+// ADMIN AUTH + PRODUCTS CODE
 window.adminLogin = () => {
   let email = document.getElementById('adminEmail').value;
   let password = document.getElementById('adminPassword').value;
@@ -173,8 +173,18 @@ onAuthStateChanged(auth, user => {
 
 const defaultProducts = {
   water500: {name:"Aquapure 500ml x24 Case",price:120,oldPrice:144,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Purified still water<br>Perfect for homes, offices & events"},
+  water1_5L: {name:"Aquapure 1.5L x6 Case",price:95,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Large family bottles<br>Great value for money"},
   water5L: {name:"Aquapure 5L x4 Case",price:160,oldPrice:200,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"High-quality purified water<br>For homes & businesses"},
-  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service"}
+  water10L: {name:"Aquapure 10L x2 Case",price:140,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bulk water supply<br>Perfect for offices"},
+  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service"},
+  refill20L: {name:"Refill 20L",price:20,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill10L: {name:"Refill 10L",price:12,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill5L: {name:"Refill 5L",price:8,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill1_5L: {name:"Refill 1.5L",price:4,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill500ml: {name:"Refill 500ml",price:2,oldPrice:0,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Bring your bottle<br>Refill & save"},
+  bottle1_5L: {name:"Aquapure 1.5L Bottle",price:18,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Single 1.5L bottle<br>Ideal for on-the-go"},
+  bottle10L: {name:"Aquapure 10L Bottle",price:70,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Single 10L bottle<br>Convenient for home use"},
+  refillAll: {name:"Aquapure Refill - All Sizes",price:0,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Refill service for 500ml, 1.5L, 5L, 10L, 20L<br>Bring your bottle and save"}
 };
 
 function renderProducts(products, stock) {
@@ -189,7 +199,7 @@ function renderProducts(products, stock) {
         <img src="${p.img}" alt="${p.name}">
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
-        <div><span class="price">R${p.price}${id==='water20L'?'/bottle':'/case'}</span> ${p.oldPrice>0?`<span class="old-price">R${p.oldPrice}</span>`:''}</div>
+        <div><span class="price">R${p.price}${id==='water20L'||id.startsWith('refill')||id.startsWith('bottle')?'/bottle':'/case'}</span> ${p.oldPrice>0?`<span class="old-price">R${p.oldPrice}</span>`:''}</div>
         ${isClientMode &&!isOOS? `<div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="qty_${id}" value="0" min="0"></div>
         <button class="btn" onclick="addToCart('${id}','${p.name}',${p.price})">Add to Order</button>` : ''}
       </div>
@@ -233,8 +243,8 @@ window.saveProducts = function() {
       name: document.getElementById(`name_${id}`).value,
       img: document.getElementById(`img_${id}`).value,
       desc: document.getElementById(`desc_${id}`).value.replace(/\n/g,'<br>'),
-      price: parseInt(document.getElementById(`price_${id}`).value),
-      oldPrice: parseInt(document.getElementById(`oldPrice_${id}`).value)||0
+      price: parseInt(document.getElementById(`price_${id}`).value) || 0,
+      oldPrice: parseInt(document.getElementById(`oldPrice_${id}`).value) || 0
     };
   });
   set(productsRef, updates)
@@ -421,16 +431,14 @@ window.printInvoice = function() {
   printWindow.print();
 }
 
-// NEW PDF DOWNLOAD - WORKS ON MOBILE
+// PDF DOWNLOAD
 window.downloadPDF = async function() {
   if(!lastInvoiceData) return;
 
   let {invNum, customer} = lastInvoiceData;
   let fileName = `Aquapure_Invoice_${invNum}_${customer.replace(/\s+/g,'_')}.pdf`;
 
-  // Build invoice in hidden div
   document.getElementById('invoicePrint').innerHTML = buildInvoiceHTML(lastInvoiceData);
-
   document.getElementById('syncStatus').innerText = '⏳ Creating PDF...';
 
   try {
