@@ -238,18 +238,40 @@ function buildEditor(products) {
 
 window.saveProducts = function() {
   const updates = {};
-  Object.keys(defaultProducts).forEach(id => {
+  let hasErrors = false;
+
+  Object.keys(currentProducts).forEach(id => {
+    const nameEl = document.getElementById(`name_${id}`);
+    const imgEl = document.getElementById(`img_${id}`);
+    const descEl = document.getElementById(`desc_${id}`);
+    const priceEl = document.getElementById(`price_${id}`);
+    const oldPriceEl = document.getElementById(`oldPrice_${id}`);
+
+    if (!nameEl ||!imgEl ||!descEl ||!priceEl) {
+      console.warn(`Skipping ${id}: input fields not found`);
+      hasErrors = true;
+      return;
+    }
+
     updates[id] = {
-      name: document.getElementById(`name_${id}`).value,
-      img: document.getElementById(`img_${id}`).value,
-      desc: document.getElementById(`desc_${id}`).value.replace(/\n/g,'<br>'),
-      price: parseInt(document.getElementById(`price_${id}`).value) || 0,
-      oldPrice: parseInt(document.getElementById(`oldPrice_${id}`).value) || 0
+      name: nameEl.value,
+      img: imgEl.value,
+      desc: descEl.value.replace(/\n/g,'<br>'),
+      price: parseInt(priceEl.value) || 0,
+      oldPrice: parseInt(oldPriceEl.value) || 0
     };
   });
+
+  if (Object.keys(updates).length === 0) {
+    alert('No products to save');
+    return;
+  }
+
   set(productsRef, updates)
-.then(() => alert('✅ Saved to Firebase!'))
-.catch(err => alert('Error: ' + err.message));
+  .then(() => {
+      alert(hasErrors? '⚠️ Saved, but some products were skipped' : '✅ Saved to Firebase!');
+    })
+  .catch(err => alert('Error: ' + err.message));
 }
 
 window.toggleStock = (id) => {
