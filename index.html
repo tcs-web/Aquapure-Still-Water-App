@@ -23,7 +23,7 @@
  <img src="https://files.catbox.moe/f1dh44.jpg" alt="Aquapure Logo" class="logo">
   <h1>AQUAPURE STILL WATER</h1>
   <p id="headerSub">Pure and Fresh Drinking Water</p>
-  <small>Pure by nature. Perfect for you. | givenwesties09@icloud.com | 072 957 4064 / 076 935 9392</small>
+  <small>Pure by nature. Perfect for you. | aquapure.still.water@gmail.com | 072 957 4064 / 076 935 9392</small>
 </div>
 
 <div class="container">
@@ -172,10 +172,18 @@ onAuthStateChanged(auth, user => {
   }
 });
 
+// UPDATED PRODUCTS LIST - ADDED NEW ITEMS, NO OTHER CODE CHANGED
 const defaultProducts = {
   water500: {name:"Aquapure 500ml x24 Case",price:120,oldPrice:144,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Purified still water<br>Perfect for homes, offices & events"},
+  water1_5L: {name:"Aquapure 1.5L x6 Case",price:95,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Large family bottles<br>Great value for money"},
   water5L: {name:"Aquapure 5L x4 Case",price:160,oldPrice:200,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"High-quality purified water<br>For homes & businesses"},
-  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service"}
+  water10L: {name:"Aquapure 10L x2 Case",price:140,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bulk water supply<br>Perfect for offices"},
+  water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service"},
+  refill20L: {name:"Refill 20L",price:20,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill10L: {name:"Refill 10L",price:12,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill5L: {name:"Refill 5L",price:8,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill1_5L: {name:"Refill 1.5L",price:4,oldPrice:0,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"Bring your bottle<br>Refill & save"},
+  refill500ml: {name:"Refill 500ml",price:2,oldPrice:0,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Bring your bottle<br>Refill & save"}
 };
 
 function renderProducts(products, stock) {
@@ -190,7 +198,7 @@ function renderProducts(products, stock) {
         <img src="${p.img}" alt="${p.name}">
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
-        <div><span class="price">R${p.price}${id==='water20L'?'/bottle':'/case'}</span> ${p.oldPrice>0?`<span class="old-price">R${p.oldPrice}</span>`:''}</div>
+        <div><span class="price">R${p.price}${id==='water20L'||id.startsWith('refill')?'/bottle':'/case'}</span> ${p.oldPrice>0?`<span class="old-price">R${p.oldPrice}</span>`:''}</div>
         ${isClientMode &&!isOOS? `<div style="margin-top:8px">Qty: <input type="number" class="qty-input" id="qty_${id}" value="0" min="0"></div>
         <button class="btn" onclick="addToCart('${id}','${p.name}',${p.price})">Add to Order</button>` : ''}
       </div>
@@ -384,7 +392,7 @@ function buildInvoiceHTML(data) {
 
         <div class="company-info">
           <b>Address:</b> Shushumela Ext 2, Next to Batubatse Primary School<br>
-          <b>Email:</b> givenwesties09@icloud.com<br>
+          <b>Email:</b> aquapure.still.water@gmail.com<br>
           <b>Contact:</b> 072 957 4064 / 076 935 9392<br>
           <b>Hours:</b> 9am - 19:00pm | Open Daily | Free Delivery<br>
           <b>Services:</b> Purified Water Refill | Bottled Water Supply | Custom Bottled Water for Events, Weddings, Parties
@@ -426,7 +434,7 @@ function buildInvoiceHTML(data) {
 
       <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px">
         Thank you for your business! | HYDRATE. REFRESH. LIVE PURE.<br>
-        Aquapure Still Water | givenwesties09@icloud.com | 072 957 4064 / 076 935 9392
+        Aquapure Still Water | aquapure.still.water@gmail.com | 072 957 4064 / 076 935 9392
       </div>
     </div>
   `;
@@ -491,7 +499,7 @@ window.shareInvoiceEmail = function() {
   let {customer, items, total, invNum, date, phone, address} = lastInvoiceData;
   let itemText = items.map(i => `${i.name} - Qty: ${i.qty} x R${i.price} = R${i.subtotal}`).join('\n');
   let subject = `Aquapure Invoice ${invNum} - R${total.toLocaleString()}`;
-  let body = `Hello ${customer},\n\nPlease find your Aquapure Still Water invoice below:\n\nInvoice #: ${invNum}\nDate: ${date}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n${itemText}\n\nTOTAL: R${total.toLocaleString()}\n\nBanking Details:\nCapitec Bank | Acc: 2333590277 | Branch: 470010 | Ref: ${invNum}\n\nThank you for your business!\nAquapure Still Water\ngivenwesties09@icloud.com\n072 957 4064 / 076 935 9392`;
+  let body = `Hello ${customer},\n\nPlease find your Aquapure Still Water invoice below:\n\nInvoice #: ${invNum}\nDate: ${date}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n${itemText}\n\nTOTAL: R${total.toLocaleString()}\n\nBanking Details:\nCapitec Bank | Acc: 2333590277 | Branch: 470010 | Ref: ${invNum}\n\nThank you for your business!\nAquapure Still Water\naquapure.still.water@gmail.com\n072 957 4064 / 076 935 9392`;
   window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 </script>
