@@ -10,6 +10,10 @@
 /* INVOICE MODAL */
 .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}.modal-content{background:white;border-radius:16px;padding:20px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}.invoice-header{text-align:center;border-bottom:2px solid var(--accent);padding-bottom:15px;margin-bottom:15px}.invoice-logo{width:70px;height:70px;border-radius:50%;margin:0 auto 8px}.invoice-table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px}.invoice-table th{background:var(--accent);color:white;padding:8px;text-align:left}.invoice-table td{padding:8px;border-bottom:1px solid var(--border)}.invoice-total{text-align:right;font-size:18px;font-weight:700;margin-top:10px;color:var(--green)}@media print{.modal{background:white}.btn{display:none}body{padding:0}}
 </style>
+
+<!-- PDF LIBRARIES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -86,7 +90,7 @@
 
     <div id="invoiceActions" style="display:none;margin-top:15px;border-top:2px solid var(--border);padding-top:15px">
       <small style="color:var(--muted)">Share invoice:</small>
-      
+
       <div style="margin-top:8px">
         <input type="tel" id="whatsappNumber" placeholder="27... for WhatsApp">
         <button class="btn btn-whatsapp" onclick="shareInvoiceWhatsApp()">📱 Send via WhatsApp</button>
@@ -105,13 +109,15 @@
   </div>
 </div>
 
-<!-- INVOICE PRINT TEMPLATE -->
-<div id="invoicePrint" style="display:none"></div>
+<!-- HIDDEN INVOICE TEMPLATE FOR PDF -->
+<div id="invoicePrint" style="position:absolute;left:-9999px;top:0;background:white;width:800px;padding:30px;font-family:Inter,sans-serif"></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+const { jsPDF } = window.jspdf;
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwZlhYw5jJ1GtzwhmWnk2JC07MpUp1Xpk",
@@ -132,16 +138,15 @@ const stockRef = ref(db, 'aquapure/stock');
 
 let cart = [];
 let currentProducts = {};
-let lastInvoiceData = null; // Store invoice data for WhatsApp
+let lastInvoiceData = null;
 const isClientMode = window.location.search.includes('client=true');
 
-// HIDE ADMIN FOR CLIENT MODE
 if(isClientMode) {
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('headerSub').innerText = 'Order via WhatsApp';
 }
 
-// ADMIN AUTH
+// ADMIN AUTH + PRODUCTS CODE - SAME AS BEFORE
 window.adminLogin = () => {
   let email = document.getElementById('adminEmail').value;
   let password = document.getElementById('adminPassword').value;
@@ -166,14 +171,12 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// DEFAULT PRODUCTS
 const defaultProducts = {
   water500: {name:"Aquapure 500ml x24 Case",price:120,oldPrice:144,img:"https://files.catbox.moe/84yxvh.jpg",desc:"Purified still water<br>Perfect for homes, offices & events"},
   water5L: {name:"Aquapure 5L x4 Case",price:160,oldPrice:200,img:"https://files.catbox.moe/hdmlkp.jpg",desc:"High-quality purified water<br>For homes & businesses"},
   water20L: {name:"Aquapure 20L Bottle",price:35,oldPrice:0,img:"https://files.catbox.moe/zjszp8.jpg",desc:"Office cooler refill<br>Same day service"}
 };
 
-// RENDER PRODUCTS
 function renderProducts(products, stock) {
   const grid = document.getElementById('productGrid');
   grid.innerHTML = '';
@@ -194,7 +197,6 @@ function renderProducts(products, stock) {
   });
 }
 
-// LOAD FROM FIREBASE
 onValue(productsRef, (snapshot) => {
   currentProducts = snapshot.val() || defaultProducts;
   onValue(stockRef, (stockSnap) => {
@@ -205,7 +207,6 @@ onValue(productsRef, (snapshot) => {
   });
 });
 
-// BUILD EDITOR - ADMIN ONLY
 function buildEditor(products) {
   const editor = document.getElementById('productEditor');
   let html = '';
@@ -225,7 +226,6 @@ function buildEditor(products) {
   editor.innerHTML = html;
 }
 
-// SAVE
 window.saveProducts = function() {
   const updates = {};
   Object.keys(defaultProducts).forEach(id => {
@@ -248,7 +248,6 @@ window.toggleStock = (id) => {
   set(ref(db, 'aquapure/stock/' + id),!isOOS);
 }
 
-// CLIENT CART FUNCTIONS
 window.addToCart = function(id, name, price) {
   let qty = parseInt(document.getElementById(`qty_${id}`).value);
   if(qty <= 0) { alert('Enter quantity first'); return; }
@@ -287,7 +286,6 @@ window.sendWhatsAppOrder = function() {
   window.open(`https://wa.me/27729574064?text=${encodeURIComponent(orderText)}`, '_blank');
 }
 
-// CLIENT LINK FUNCTIONS - ADMIN ONLY
 window.copyClientLink = function() {
   let baseUrl = window.location.href.split('?')[0];
   let clientUrl = baseUrl + '?client=true';
@@ -303,7 +301,7 @@ window.shareWhatsApp = function() {
   window.open(`https://wa.me/?text=${encodeURIComponent('Order Aquapure Still Water: ' + clientUrl)}`, '_blank');
 }
 
-// INVOICE GENERATOR - ADMIN ONLY
+// INVOICE FUNCTIONS
 window.openInvoiceModal = function() {
   let html = '';
   Object.keys(currentProducts).forEach(id => {
@@ -326,6 +324,7 @@ window.closeInvoiceModal = function() {
 window.generateInvoice = function() {
   let customer = document.getElementById('invCustomer').value;
   let phone = document.getElementById('invPhone').value;
+  let email = document.getElementById('invEmail').value;
   let address = document.getElementById('invAddress').value;
 
   if(!customer) { alert('Enter customer name'); return; }
@@ -347,7 +346,6 @@ window.generateInvoice = function() {
 
   if(items.length === 0) { alert('Select at least 1 product'); return; }
 
-  // Format phone for WhatsApp: 072... -> 2772...
   let waPhone = phone.replace(/\s+/g,'').replace(/[^0-9]/g,'');
   if(waPhone.startsWith('0')) waPhone = '27' + waPhone.substring(1);
   if(!waPhone.startsWith('27')) waPhone = '27' + waPhone;
@@ -355,20 +353,17 @@ window.generateInvoice = function() {
   let invNum = 'AP' + Date.now().toString().slice(-6);
   let date = new Date().toLocaleDateString('en-ZA');
 
-  // Store for WhatsApp share
-  lastInvoiceData = {customer, phone, address, items, total, invNum, date, waPhone};
+  lastInvoiceData = {customer, phone, email, address, items, total, invNum, date, waPhone};
 
-  // Show WhatsApp actions
   document.getElementById('whatsappNumber').value = waPhone;
+  document.getElementById('emailAddress').value = email;
   document.getElementById('invoiceActions').style.display = 'block';
 
-  alert('✅ Invoice ready! Edit WhatsApp number if needed, then click Send WhatsApp or Print PDF');
+  alert('✅ Invoice ready! Click Download PDF to save file');
 }
 
-window.printInvoice = function() {
-  if(!lastInvoiceData) return;
-  let {customer, phone, address, items, total, invNum, date} = lastInvoiceData;
-
+function buildInvoiceHTML(data) {
+  let {customer, phone, address, items, total, invNum, date} = data;
   let rows = items.map(i => `
     <tr>
       <td>${i.name}</td>
@@ -378,7 +373,7 @@ window.printInvoice = function() {
     </tr>
   `).join('');
 
-  let invoiceHTML = `
+  return `
     <div style="padding:30px;font-family:Inter,sans-serif;max-width:800px;margin:0 auto">
       <div class="invoice-header">
         <img src="https://files.catbox.moe/f1dh44.jpg" class="invoice-logo">
@@ -415,27 +410,71 @@ window.printInvoice = function() {
       </div>
     </div>
   `;
+}
 
-  document.getElementById('invoicePrint').innerHTML = invoiceHTML;
+window.printInvoice = function() {
+  if(!lastInvoiceData) return;
+  document.getElementById('invoicePrint').innerHTML = buildInvoiceHTML(lastInvoiceData);
   let printWindow = window.open('', '_blank');
-  printWindow.document.write(`<html><head><title>Invoice ${invNum}</title><style>@media print{body{margin:0}}${document.querySelector('style').innerText}</style></head><body>${invoiceHTML}</body></html>`);
+  printWindow.document.write(`<html><head><title>Invoice ${lastInvoiceData.invNum}</title><style>${document.querySelector('style').innerText}</style></head><body>${buildInvoiceHTML(lastInvoiceData)}</body></html>`);
   printWindow.document.close();
   printWindow.print();
 }
 
-window.shareInvoiceWhatsApp = function() {
+// NEW PDF DOWNLOAD - WORKS ON MOBILE
+window.downloadPDF = async function() {
   if(!lastInvoiceData) return;
 
+  let {invNum, customer} = lastInvoiceData;
+  let fileName = `Aquapure_Invoice_${invNum}_${customer.replace(/\s+/g,'_')}.pdf`;
+
+  // Build invoice in hidden div
+  document.getElementById('invoicePrint').innerHTML = buildInvoiceHTML(lastInvoiceData);
+
+  document.getElementById('syncStatus').innerText = '⏳ Creating PDF...';
+
+  try {
+    const canvas = await html2canvas(document.getElementById('invoicePrint'), {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(fileName);
+
+    document.getElementById('syncStatus').innerText = '🟢 Connected';
+    alert('✅ PDF Downloaded! Check your Downloads folder');
+  } catch(e) {
+    document.getElementById('syncStatus').innerText = '🟢 Connected';
+    alert('Error creating PDF: ' + e.message);
+  }
+}
+
+window.shareInvoiceWhatsApp = function() {
+  if(!lastInvoiceData) return;
   let waPhone = document.getElementById('whatsappNumber').value.replace(/\s+/g,'').replace(/[^0-9]/g,'');
   if(!waPhone.startsWith('27')) waPhone = '27' + waPhone;
-
   let {customer, items, total, invNum, date} = lastInvoiceData;
-
   let itemText = items.map(i => `• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}`).join('\n\n');
-
   let message = `Hello ${customer}, here is your Aquapure invoice:\n\n*Invoice #${invNum}*\nDate: ${date}\n\n${itemText}\n\n*TOTAL: R${total.toLocaleString()}*\n\nThank you for your business! 💧`;
-
   window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+window.shareInvoiceEmail = function() {
+  if(!lastInvoiceData) return;
+  let email = document.getElementById('emailAddress').value;
+  if(!email) { alert('Enter customer email'); return; }
+  let {customer, items, total, invNum, date, phone, address} = lastInvoiceData;
+  let itemText = items.map(i => `${i.name} - Qty: ${i.qty} x R${i.price} = R${i.subtotal}`).join('\n');
+  let subject = `Aquapure Invoice ${invNum} - R${total.toLocaleString()}`;
+  let body = `Hello ${customer},\n\nPlease find your Aquapure Still Water invoice below:\n\nInvoice #: ${invNum}\nDate: ${date}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n${itemText}\n\nTOTAL: R${total.toLocaleString()}\n\nThank you for your business!\nAquapure Still Water\n072 957 4064`;
+  window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 </script>
 </body>
