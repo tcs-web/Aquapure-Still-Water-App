@@ -6,61 +6,19 @@
 <title>Aquapure Wholesale Catalog</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-:root{--bg:#f8fafc;--card:#ffffff;--accent:#2563eb;--accent-dark:#1e40af;--green:#16a34a;--red:#dc2626;--blue:#1e40af;--purple:#7c3aed;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--shadow:0 1px 3px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.05);--shadow-lg:0 10px 40px rgba(37,99,235,0.15);--gradient:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);}
-*{box-sizing:border-box}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;padding-bottom:280px;-webkit-font-smoothing:antialiased;}
-.header{background:var(--gradient);color:white;padding:25px 15px;text-align:center;position:relative;box-shadow:var(--shadow-lg);}
-.logo{width:90px;height:90px;border-radius:50%;background:white;padding:6px;margin:0 auto 12px;border:3px solid rgba(255,255,255,0.3);object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.2);}
-.header h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-0.5px;}
-.header p{margin:8px 0 0;font-size:13px;opacity:0.9;font-weight:400;}
-.container{padding:20px 15px 240px 15px;max-width:1000px;margin:0 auto}
-.card{background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:var(--shadow);position:relative;border:1px solid var(--border);transition:all 0.3s}
-.card.oos{opacity:0.4;filter:grayscale(0.5)}
-.card.oos::after{content:'OUT OF STOCK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);background:var(--red);color:white;padding:10px 24px;font-weight:700;border-radius:8px;font-size:14px;z-index:10;box-shadow:0 4px 12px rgba(220,38,38,0.4);letter-spacing:1px;}
-.card img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:12px;border:1px solid var(--border);}
-.card h3{margin:8px 0;color:var(--accent);font-size:17px;font-weight:700;}
-.price{font-size:20px;font-weight:700;color:var(--green);}
-.old-price{text-decoration:line-through;color:var(--muted);font-size:13px;margin-left:6px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
-.btn{background:var(--gradient);color:white;border:none;padding:12px 18px;border-radius:10px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;}
-.btn:disabled{background:var(--muted);cursor:not-allowed}
-.btn-green{background:var(--green)}
-.btn-red{background:var(--red)}
-.btn-blue{background:var(--blue)}
-.btn-secondary{background:#475569;font-size:13px;box-shadow:none}
-.btn-whatsapp{background:linear-gradient(135deg,#25D366,#128C7E)}
-.admin-panel{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:16px;border-radius:12px;margin:18px 0;border:2px dashed var(--accent);}
-.toggle-btn{background:#64748b;color:white;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-left:5px;display:inline-block;font-weight:600;}
-.qty-input{width:70px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;text-align:center;margin:0 6px;font-weight:600;font-size:14px;}
-input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{width:100%;padding:10px 12px;margin:6px 0;border:1px solid var(--border);border-radius:10px;font-size:14px;}
-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;}
-.sync-status{position:fixed;top:80px;right:12px;z-index:999;background:var(--green);color:white;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:600;}
-.cart{position:fixed;bottom:0;left:0;right:0;background:var(--card);padding:16px;border-top:3px solid var(--accent);box-shadow:0 -4px 20px rgba(0,0,0,0.12);max-height:320px;overflow-y:auto;display:none;}
-.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:600;}
-.cart-total{font-size:22px;font-weight:700;color:var(--green);margin:12px 0;}
-.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;background:#f8fafc;border-radius:8px;margin-bottom:6px;}
-.copy-box{display:flex;gap:6px;margin-top:10px}
-.copy-box input{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;}
+:root{--bg:#f8fafc;--card:#ffffff;--accent:#2563eb;--accent-dark:#1e40af;--green:#16a34a;--red:#dc2626;--blue:#1e40af;--purple:#7c3aed;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--shadow:0 1px 3px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.05);--shadow-lg:0 10px 40px rgba(37,99,235,0.15);--gradient:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);}*{box-sizing:border-box}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;padding-bottom:280px;-webkit-font-smoothing:antialiased;}.header{background:var(--gradient);color:white;padding:25px 15px;text-align:center;position:relative;box-shadow:var(--shadow-lg);}.logo{width:90px;height:90px;border-radius:50%;background:white;padding:6px;margin:0 auto 12px;border:3px solid rgba(255,255,255,0.3);object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.2);}.header h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-0.5px;}.header p{margin:8px 0 0;font-size:13px;opacity:0.9;font-weight:400;}.container{padding:20px 15px 240px 15px;max-width:1000px;margin:0 auto}.card{background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:var(--shadow);position:relative;border:1px solid var(--border);transition:all 0.3s}.card.oos{opacity:0.4;filter:grayscale(0.5)}.card.oos::after{content:'OUT OF STOCK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);background:var(--red);color:white;padding:10px 24px;font-weight:700;border-radius:8px;font-size:14px;z-index:10;box-shadow:0 4px 12px rgba(220,38,38,0.4);letter-spacing:1px;}.card img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:12px;border:1px solid var(--border);}.card h3{margin:8px 0;color:var(--accent);font-size:17px;font-weight:700;}.price{font-size:20px;font-weight:700;color:var(--green);}.old-price{text-decoration:line-through;color:var(--muted);font-size:13px;margin-left:6px;}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}.btn{background:var(--gradient);color:white;border:none;padding:12px 18px;border-radius:10px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;}.btn:disabled{background:var(--muted);cursor:not-allowed}.btn-green{background:var(--green)}.btn-red{background:var(--red)}.btn-blue{background:var(--blue)}.btn-secondary{background:#475569;font-size:13px;box-shadow:none}.btn-whatsapp{background:linear-gradient(135deg,#25D366,#128C7E)}.admin-panel{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:16px;border-radius:12px;margin:18px 0;border:2px dashed var(--accent);}.toggle-btn{background:#64748b;color:white;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-left:5px;display:inline-block;font-weight:600;}.qty-input{width:70px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;text-align:center;margin:0 6px;font-weight:600;font-size:14px;}input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{width:100%;padding:10px 12px;margin:6px 0;border:1px solid var(--border);border-radius:10px;font-size:14px;}textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;}.sync-status{position:fixed;top:80px;right:12px;z-index:999;background:var(--green);color:white;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:600;}.cart{position:fixed;bottom:0;left:0;right:0;background:var(--card);padding:16px;border-top:3px solid var(--accent);box-shadow:0 -4px 20px rgba(0,0,0,0.12);max-height:320px;overflow-y:auto;display:none;}.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:600;}.cart-total{font-size:22px;font-weight:700;color:var(--green);margin:12px 0;}.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;background:#f8fafc;border-radius:8px;margin-bottom:6px;}.copy-box{display:flex;gap:6px;margin-top:10px}.copy-box input{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;}
+/* INVOICE MODAL */
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}.modal-content{background:white;border-radius:16px;padding:20px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}.invoice-header{text-align:center;border-bottom:2px solid var(--accent);padding-bottom:15px;margin-bottom:15px}.invoice-logo{width:70px;height:70px;border-radius:50%;margin:0 auto 8px}.invoice-table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px}.invoice-table th{background:var(--accent);color:white;padding:8px;text-align:left}.invoice-table td{padding:8px;border-bottom:1px solid var(--border)}.invoice-total{text-align:right;font-size:18px;font-weight:700;margin-top:10px;color:var(--green)}.invoice-bank{background:#f0f9ff;border:1px solid var(--accent);padding:10px;border-radius:8px;margin-top:15px;font-size:12px;}@media print{.modal{background:white}.btn{display:none}body{padding:0}}
 
-/* NEW: Footer styles */
+/* ADDED: Footer styles */
 .footer{background:var(--card);border-top:2px solid var(--border);padding:25px 15px;margin-top:40px;font-size:13px;}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;max-width:1000px;margin:0 auto;}
 .footer h4{margin:0 0 10px;color:var(--accent);font-size:15px;}
 .footer p{margin:5px 0;color:var(--muted);}
 .footer.bank-box{background:#f0f9ff;border:1px solid var(--accent);padding:12px;border-radius:10px;margin-top:8px;}
-
-/* INVOICE MODAL */
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-content{background:white;border-radius:16px;padding:20px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
-.invoice-header{text-align:center;border-bottom:2px solid var(--accent);padding-bottom:15px;margin-bottom:15px}
-.invoice-logo{width:70px;height:70px;border-radius:50%;margin:0 auto 8px}
-.invoice-table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px}
-.invoice-table th{background:var(--accent);color:white;padding:8px;text-align:left}
-.invoice-table td{padding:8px;border-bottom:1px solid var(--border)}
-.invoice-total{text-align:right;font-size:18px;font-weight:700;margin-top:10px;color:var(--green)}
-.invoice-bank{background:#f0f9ff;border:1px solid var(--accent);padding:10px;border-radius:8px;margin-top:15px;font-size:12px;}
-@media print{.modal{background:white}.btn{display:none}body{padding:0}}
 </style>
 
+<!-- PDF LIBRARIES -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -72,18 +30,20 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radi
  <img src="https://files.catbox.moe/f1dh44.jpg" alt="Aquapure Logo" class="logo">
   <h1>AQUAPURE STILL WATER</h1>
   <p id="headerSub">Pure and Fresh Drinking Water</p>
-  <p style="font-size:12px;margin-top:5px;">Pure by nature. Perfect for you.</p>
+  <p style="font-size:12px;margin-top:5px;">Pure by nature. Perfect for you.</p> <!-- ADDED -->
 </div>
 
 <div class="container">
 
 <div class="admin-panel" id="adminPanel">
   <h4>⚙️ Admin Controls - Firebase Sync</h4>
+
   <div id="loginForm">
     <input type="email" id="adminEmail" placeholder="Admin Email">
     <input type="password" id="adminPassword" placeholder="Password">
     <button class="btn btn-blue" onclick="adminLogin()">🔐 Login</button>
   </div>
+
   <div id="adminControls" style="display:none;margin-top:10px">
     <p style="font-size:11px;color:var(--green);margin:5px 0">✅ Logged in</p>
     <button class="btn-red" onclick="adminLogout()">Logout</button>
@@ -93,6 +53,7 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radi
       <input type="text" id="clientLink" readonly>
       <button class="btn-whatsapp" onclick="shareWhatsApp()">Share</button>
     </div>
+
     <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
       <h4 style="margin:0 0 10px; color:var(--purple);">✏️ Edit Products</h4>
       <div id="productEditor"></div>
@@ -103,7 +64,9 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radi
 </div>
 
 <div class="section-title">💧 Products</div>
-<div class="grid" id="productGrid"></div>
+<div class="grid" id="productGrid">
+<!-- Cards render here via JS -->
+</div>
 
 </div>
 
@@ -118,7 +81,7 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radi
   <button class="btn btn-whatsapp" onclick="sendWhatsAppOrder()">📱 Send Order via WhatsApp</button>
 </div>
 
-<!-- NEW: Footer -->
+<!-- ADDED: Footer -->
 <footer class="footer">
   <div class="footer-grid">
     <div>
@@ -167,14 +130,17 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radi
 
     <div id="invoiceActions" style="display:none;margin-top:15px;border-top:2px solid var(--border);padding-top:15px">
       <small style="color:var(--muted)">Share invoice:</small>
+
       <div style="margin-top:8px">
         <input type="tel" id="whatsappNumber" placeholder="27... for WhatsApp">
         <button class="btn btn-whatsapp" onclick="shareInvoiceWhatsApp()">📱 Send via WhatsApp</button>
       </div>
+
       <div style="margin-top:8px">
         <input type="email" id="emailAddress" placeholder="customer@email.com">
         <button class="btn btn-blue" onclick="shareInvoiceEmail()">📧 Send via Email</button>
       </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
         <button class="btn btn-green" onclick="downloadPDF()">⬇️ Download PDF</button>
         <button class="btn-secondary" onclick="printInvoice()">🖨️ Print Only</button>
@@ -283,10 +249,13 @@ function renderProducts(products, stock) {
 
 onValue(productsRef, (snapshot) => {
   currentProducts = snapshot.val();
+
+  // If Firebase is empty, seed it with defaultProducts
   if (!currentProducts) {
     set(productsRef, defaultProducts);
     currentProducts = defaultProducts;
   }
+
   onValue(stockRef, (stockSnap) => {
     let stock = stockSnap.val() || {};
     renderProducts(currentProducts, stock);
@@ -294,7 +263,6 @@ onValue(productsRef, (snapshot) => {
     document.getElementById('syncStatus').innerText = '🟢 Connected';
   });
 });
-
 function buildEditor(products) {
   const editor = document.getElementById('productEditor');
   let html = '';
@@ -317,17 +285,20 @@ function buildEditor(products) {
 window.saveProducts = function() {
   const updates = {};
   let hasErrors = false;
+
   Object.keys(currentProducts).forEach(id => {
     const nameEl = document.getElementById(`name_${id}`);
     const imgEl = document.getElementById(`img_${id}`);
     const descEl = document.getElementById(`desc_${id}`);
     const priceEl = document.getElementById(`price_${id}`);
     const oldPriceEl = document.getElementById(`oldPrice_${id}`);
+
     if (!nameEl ||!imgEl ||!descEl ||!priceEl) {
       console.warn(`Skipping ${id}: input fields not found`);
       hasErrors = true;
       return;
     }
+
     updates[id] = {
       name: nameEl.value,
       img: imgEl.value,
@@ -336,10 +307,12 @@ window.saveProducts = function() {
       oldPrice: parseInt(oldPriceEl.value) || 0
     };
   });
+
   if (Object.keys(updates).length === 0) {
     alert('No products to save');
     return;
   }
+
   set(productsRef, updates)
  .then(() => {
       alert(hasErrors? '⚠️ Saved, but some products were skipped' : '✅ Saved to Firebase!');
@@ -382,15 +355,15 @@ function updateCart() {
 }
 
 window.removeItem = function(index) { cart.splice(index, 1); updateCart(); }
-window.clearCart = function() { if(confirm('Clear cart?')) { cart = []; updateCart(); }
+window.clearCart = function() { if(confirm('Clear cart?')) { cart = []; updateCart(); } }
 
-// UPDATED: Added email and banking details to WhatsApp order
+// ADDED: Banking details to WhatsApp order
 window.sendWhatsAppOrder = function() {
   if(cart.length === 0) return;
   let total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  let orderText = 'Hello Aquapure, new order:\n\n' + cart.map(i=>`• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}\n`).join('') + 
+  let orderText = 'Hello Aquapure, new order:\n\n' + cart.map(i=>`• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}\n`).join('') +
   `TOTAL: R${total.toLocaleString()}\n\nName: \nAddress: \nPhone: \n\n` +
-  `Payment Details:\nCapitec Bank\nAcc: 2333590277\nBranch: 470010`;
+  `Payment Details:\nCapitec Bank\nAcc: 2333590277\nBranch: 470010\nAcc Name: Aquapure Still Water`;
   window.open(`https://wa.me/27729574064?text=${encodeURIComponent(orderText)}`, '_blank');
 }
 
@@ -434,9 +407,12 @@ window.generateInvoice = function() {
   let phone = document.getElementById('invPhone').value;
   let email = document.getElementById('invEmail').value;
   let address = document.getElementById('invAddress').value;
+
   if(!customer) { alert('Enter customer name'); return; }
+
   let items = [];
   let total = 0;
+
   Object.keys(currentProducts).forEach(id => {
     let chk = document.getElementById(`inv_chk_${id}`);
     let qty = parseInt(document.getElementById(`inv_qty_${id}`).value);
@@ -448,16 +424,22 @@ window.generateInvoice = function() {
       total += subtotal;
     }
   });
+
   if(items.length === 0) { alert('Select at least 1 product'); return; }
+
   let waPhone = phone.replace(/\s+/g,'').replace(/[^0-9]/g,'');
   if(waPhone.startsWith('0')) waPhone = '27' + waPhone.substring(1);
   if(!waPhone.startsWith('27')) waPhone = '27' + waPhone;
+
   let invNum = 'AP' + Date.now().toString().slice(-6);
   let date = new Date().toLocaleDateString('en-ZA');
+
   lastInvoiceData = {customer, phone, email, address, items, total, invNum, date, waPhone};
+
   document.getElementById('whatsappNumber').value = waPhone;
   document.getElementById('emailAddress').value = email;
   document.getElementById('invoiceActions').style.display = 'block';
+
   alert('✅ Invoice ready! Click Download PDF to save file');
 }
 
@@ -506,7 +488,8 @@ function buildInvoiceHTML(data) {
 
       <div class="invoice-total">TOTAL: R${total.toLocaleString()}</div>
 
-            <div class="invoice-bank">
+      <!-- ADDED: Banking details in invoice -->
+      <div class="invoice-bank">
         <strong>Payment Details:</strong><br>
         Bank: Capitec Bank<br>
         Account Name: Aquapure Still Water<br>
@@ -543,7 +526,7 @@ window.downloadPDF = async function() {
   document.getElementById('syncStatus').innerText = '⏳ Creating PDF...';
 
   try {
-    const canvas = await html2canvas(document.getElementById('invoicePrint'), {
+        const canvas = await html2canvas(document.getElementById('invoicePrint'), {
       scale: 2,
       useCORS: true,
       backgroundColor: '#ffffff'
@@ -571,8 +554,7 @@ window.shareInvoiceWhatsApp = function() {
   if(!waPhone.startsWith('27')) waPhone = '27' + waPhone;
   let {customer, items, total, invNum, date} = lastInvoiceData;
   let itemText = items.map(i => `• ${i.name}\n Qty: ${i.qty} | R${i.subtotal.toLocaleString()}`).join('\n\n');
-  let message = `Hello ${customer}, here is your Aquapure invoice:\n\n*Invoice #${invNum}*\nDate: ${date}\n\n${itemText}\n\n*TOTAL: R${total.toLocaleString()}*\n\n` +
-  `Payment Details:\nCapitec Bank\nAcc: 2333590277\nBranch: 470010\nRef: ${invNum}\n\nThank you for your business! 💧`;
+  let message = `Hello ${customer}, here is your Aquapure invoice:\n\n*Invoice #${invNum}*\nDate: ${date}\n\n${itemText}\n\n*TOTAL: R${total.toLocaleString()}*\n\nThank you for your business! 💧`;
   window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
@@ -583,9 +565,7 @@ window.shareInvoiceEmail = function() {
   let {customer, items, total, invNum, date, phone, address} = lastInvoiceData;
   let itemText = items.map(i => `${i.name} - Qty: ${i.qty} x R${i.price} = R${i.subtotal}`).join('\n');
   let subject = `Aquapure Invoice ${invNum} - R${total.toLocaleString()}`;
-  let body = `Hello ${customer},\n\nPlease find your Aquapure Still Water invoice below:\n\nInvoice #: ${invNum}\nDate: ${date}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n${itemText}\n\nTOTAL: R${total.toLocaleString()}\n\n` +
-  `Payment Details:\nBank: Capitec Bank\nAccount Name: Aquapure Still Water\nAccount No: 2333590277\nBranch Code: 470010\nReference: ${invNum}\n\n` +
-  `Thank you for your business!\nAquapure Still Water\n072 957 4064\n076 935 9392\naquapure.still.water@gmail.com`;
+  let body = `Hello ${customer},\n\nPlease find your Aquapure Still Water invoice below:\n\nInvoice #: ${invNum}\nDate: ${date}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n${itemText}\n\nTOTAL: R${total.toLocaleString()}\n\nThank you for your business!\nAquapure Still Water\n072 957 4064`;
   window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 </script>
